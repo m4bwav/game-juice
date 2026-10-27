@@ -1,0 +1,30 @@
+{
+  "name": "game-juice",
+  "icon": "./.claude-plugin/icon.png",
+  "version": "1.0.0",
+  "description": "Evergreen skills that study a game's codebase and suggest juice: screen shake, hit-stop, squash and stretch, easing, camera kick, layered and pitch-varied sound, responsive UI, haptics, coyote time and input buffering. juice-scan maps the feel moments and writes a prioritized report with file, function, cited principle, parameters and an engine code sketch; juice-apply implements a chosen suggestion behind toggles with accessibility options; juice-principles holds the medium-independent knowledge base and Schell-style lenses. Unity, Godot, Roblox, Phaser/PixiJS/GSAP and Pygame.",
+  "author": {
+    "name": "Mark Rogers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "game-feel",
+    "juice",
+    "polish",
+    "screen-shake",
+    "hit-stop",
+    "unity",
+    "godot",
+    "roblox",
+    "phaser",
+    "pygame",
+    "agent-skills",
+    "evergreen"
+  ],
+  "skills": "./skills",
+  "repository": "https://github.com/m4bwav/game-juice",
+  "homepage": "https://github.com/m4bwav/game-juice",
+  "documentationUrl": "https://github.com/m4bwav/game-juice#readme",
+  "supportUrl": "https://github.com/m4bwav/game-juice/issues",
+  "privacyPolicyUrl": "https://github.com/m4bwav/game-juice#privacy"
+}

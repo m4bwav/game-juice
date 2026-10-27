@@ -1,0 +1,25 @@
+# Checks the skills' structure, manifests, links and public-safety guards, and runs the scanner against the
+# five sample games, on Linux and Windows with the oldest and newest supported Python. A change that only
+# works on the author's machine or Python version cannot land unnoticed.
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  checks:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ["3.9", "3.13"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: skills, companions, manifests, links and text guards
+        run: python tests/check_skills.py
+      - name: scanner against the sample games
+        run: python tests/check_scan.py

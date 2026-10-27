@@ -1,0 +1,35 @@
+# Official releases. Push a tag `vX.Y.Z` (matching .claude-plugin/plugin.json) and this job runs both checks,
+# packs the plugin with scripts/pack.py and publishes dist/* as a GitHub release.
+name: release
+on:
+  push:
+    tags: ["v*"]
+permissions:
+  contents: write
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: version in plugin.json must match the tag
+        run: |
+          v=$(python -c "import json;print(json.load(open('.claude-plugin/plugin.json'))['version'])")
+          test "v$v" = "${GITHUB_REF_NAME}" || { echo "plugin.json says $v, tag is ${GITHUB_REF_NAME}"; exit 1; }
+      - name: structure checks
+        run: python tests/check_skills.py
+      - name: scanner checks
+        run: python tests/check_scan.py
+      - name: pack
+        run: python scripts/pack.py
+      - name: publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v="${GITHUB_REF_NAME#v}"
+          gh release create "${GITHUB_REF_NAME}" dist/* \
+            --title "game-juice ${v}" \
+            --generate-notes \
+            --notes "Install in Claude Code: \`claude plugin marketplace add m4bwav/game-juice\`, then \`claude plugin install game-juice@game-juice\`. Copilot, Codex, Cursor and other Agent Skills readers: unzip game-juice-${v}.zip and link or copy each folder under game-juice/skills/ into your agent's skills folder (~/.agents/skills, ~/.claude/skills or .claude/skills). game-juice.plugin is the flat archive for Cowork's Save plugin; the -mail.zip stores .py files as .py.txt so mail filters pass it (rename them back). INSTALL-PROMPT.txt walks an agent through the install. Reasoned changes: each skill's CHANGELOG.md."

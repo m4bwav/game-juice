@@ -1,0 +1,21 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "game-juice",
+  "version": "1.0.0",
+  "description": "Evergreen skills that audit a game's codebase for juice and game feel, suggest prioritized improvements with cited principles and engine code sketches, and implement them behind accessibility-aware toggles.",
+  "author": {
+    "name": "Mark Rogers",
+    "url": "https://github.com/m4bwav"
+  },
+  "homepage": "https://github.com/m4bwav/game-juice",
+  "repository": "https://github.com/m4bwav/game-juice",
+  "license": "MIT",
+  "keywords": [
+    "game-feel",
+    "juice",
+    "polish",
+    "agent-skills",
+    "evergreen",
+    "cross-agent"
+  ]
+}

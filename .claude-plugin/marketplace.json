@@ -1,0 +1,8 @@
+{
+  "name": "game-juice",
+  "owner": { "name": "Mark Rogers" },
+  "metadata": { "description": "Audit a game's code for juice and game feel, then implement the suggestions behind toggles" },
+  "plugins": [
+    { "name": "game-juice", "source": "./", "description": "Three evergreen skills: juice-scan (audit and report), juice-apply (implement a suggestion), juice-principles (knowledge base and lenses)" }
+  ]
+}

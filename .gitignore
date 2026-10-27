@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+dist/
+juice-report.md
+juice-changes.md
+/evals/
