@@ -19,14 +19,20 @@ import re
 import sys
 from datetime import datetime
 
-VERSION = "1.0.0"
+VERSION = "1.1.0"
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "Library", "Temp", "Logs", "obj", "bin",
     "Build", "Builds", "build", "dist", "out", ".godot", ".import", "__pycache__",
     "venv", ".venv", "env", "Packages", "UserSettings", "Intermediate", "Binaries",
     "DerivedDataCache", "Saved", ".idea", ".vs", ".vscode", "coverage", "Pods",
+    # Test suites and Unity editor-only code never reach the player.
+    "Tests", "tests", "test", "Test", "__tests__", "spec", "Editor",
 }
+TEST_FILE = re.compile(r"(Tests?\.cs|_test\.(py|gd|lua)|\.(test|spec)\.(js|ts|jsx|tsx)|\.spec\.luau?)$|^test_\w+\.py$")
+# Queries and helpers that only name a moment (HasPendingDamageReveal, GetImpactPosition, HitTest)
+# are not the moment itself.
+PREDICATE_NAME = re.compile(r"^(Has|Is|Can|Get|Should|Meets|Find|Compute|Calc|Count)[A-Z]|^(has|is|can|get|should|find)_|[Hh]it_?[Tt]est|^Hits$")
 VENDOR_DIRS = {"Plugins", "addons", "ThirdParty", "vendor", "Vendor", "lib", "libs", "Packages"}
 
 LANG_BY_EXT = {
@@ -185,6 +191,9 @@ MOMENTS = [
     ("ui_button", r"onclick|on_click|button|pressed|menu|onpointer|mousebutton1click|hover", r"onClick|\.pressed\.connect|MouseButton1Click|addEventListener\(['\"](click|pointerdown)|setInteractive|on\(['\"]pointerdown"),
     ("transition", r"loadscene|load_scene|change_scene|transition|fade|nextlevel|next_level|restart|teleport", r"SceneManager\.LoadScene|change_scene_to|scene\.start|TeleportAsync|location\.href"),
     ("camera", r"camera|cam\b|follow", r"Camera\.main|camera\.|Camera2D|CurrentCamera|cameras\.main"),
+    ("card_play", r"playcard|play_card|cardplayed|card_played|tryplay|castcard|cast_card", r"OnCardPlayed|card_played|PlayCard\(|play_card\(|discardPile|discard_pile"),
+    ("card_draw", r"drawcard|draw_card|carddraw|dealcard|deal_card|drawsequence|singledraw|drawhand|draw_hand", r"DrawCard\(|draw_card\(|hand\.Add\(|hand\.append\(|hand\.push\(|deck\.Draw"),
+    ("turn", r"endturn|end_turn|turnended|turn_ended|nextturn|next_turn|startturn|turnstarted|newround|new_round", r"OnTurnEnded|turn_ended|EndTurn\(|end_turn\(|turnNumber\s*\+\+|turn\s*\+=\s*1"),
     ("movement", r"^move|movement|walk|run\b|dash", r"velocity|move_and_slide|MoveTo|AddForce|\.Move\(|transform\.position\s*\+=|rect\.(x|y)\s*[+-]="),
     ("input", r"input|keydown|keypressed|keypress|onmove|onjump|_unhandled_input", r"Input\.Get|InputAction|UserInputService|ContextActionService|is_action_just_pressed|KEYDOWN|keyboard\.|love\.keypressed|addEventListener\(['\"]key"),
 ]
@@ -215,6 +224,9 @@ EXPECTED = {
     "camera": ["motion"],
     "movement": ["visual", "motion", "audio"],
     "input": ["timing"],
+    "card_play": ["motion", "audio", "visual"],
+    "card_draw": ["motion", "audio"],
+    "turn": ["motion", "audio", "ui"],
 }
 
 PROJECT_CHECKS = {
@@ -268,6 +280,8 @@ def walk(root: str, include_vendor: bool, max_files: int) -> tuple[list[str], li
             keep.append(d)
         dirnames[:] = keep
         for f in filenames:
+            if TEST_FILE.search(f):
+                continue
             if os.path.splitext(f)[1].lower() in LANG_BY_EXT:
                 files.append(os.path.join(dirpath, f))
                 if len(files) >= max_files:
@@ -282,6 +296,8 @@ def classify(name: str, body: str, rel: str = "", nlines: int = 0) -> list[tuple
     # Long game-loop functions often hold several moments inline; accept weaker evidence there.
     threshold = 1 if nlines >= 25 else 2
     camera_file = "camera" in os.path.basename(rel).lower()
+    if PREDICATE_NAME.search(short):
+        return []
     for moment, name_rx, body_rx in MOMENT_NAME_RX:
         s = 0
         if name_rx.search(name.replace(" handler", "")):

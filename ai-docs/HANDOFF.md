@@ -9,7 +9,7 @@
 
 ## In progress
 
-- None.
+- 2026-10-28: the first field test on the Unity deckbuilder produced 1.1.0. The scanner gained card_play, card_draw and turn moments, and it now skips tests, Unity Editor folders and predicate helpers (juice-scan L-002, L-003, T-20261028-1). The report lives at that game's root as juice-report.md. The next field step is juice-apply on S-05 (the settings toggle), then S-01.
 
 ## Decisions made this session
 

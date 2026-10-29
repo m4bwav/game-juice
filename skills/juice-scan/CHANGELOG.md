@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261028-1 · 2026-10-28 · Scanner 1.1.0: card-game moments, tests and editor code skipped, predicates dropped
+- because: L-002, L-003, T-20261028-1
+- files: scripts/juice_scan.py (SKIP_DIRS, TEST_FILE, PREDICATE_NAME, MOMENTS, EXPECTED), tests/check_scan.py (unity-deckbuilder fixture, EXPECT_ABSENT)
+- New moments `card_play`, `card_draw` and `turn` with their expected channels. Test folders, test files and Unity `Editor/` folders are no longer scanned. Query helpers (`Has*`, `Is*`, `Get*`, `Meets*`, hit tests) no longer count as moments.
+
 ### C-20261026-4 · 2026-10-26 · Published as part of the public game-juice repository
 - because: user request
 - files: RESEARCH.md (R-20261026-1 wording), TESTS.md (T-20261026-1)
