@@ -8,6 +8,10 @@ Entry shape: `### T-YYYYMMDD-n · date · harness · env · passed/total`, then 
 
 ## Runs
 
+### T-20261028-1 · 2026-10-28 · field use, Claude Code in VS Code · Windows 11 · 1/1 (field test, not the suite)
+- Real Unity deckbuilder (199 C# files). The 1.0.0 scanner returned 168 moments: no card play, draw or turn moments, and test, editor and predicate rows mixed in with the rest. After the 1.1.0 fixes it returned 140 moments with OnCardPlayed, TryPlayCard, OnCardDrawn, AnimateSingleDraw and OnTurnEnded rated high or medium. `tests/check_scan.py` passes with the new unity-deckbuilder fixture (7/7), and so does `tests/check_skills.py`. The report had 9 suggestions, and every file and function in it was checked against code that was opened.
+- led to: C-20261028-1, L-002, L-003
+
 ### T-20261026-3 · 2026-10-26 · claude -p 2.1.281 · dev-machine Windows 11 · 3/3 (partial: spot checks while publishing)
 - Not a full suite run; extra evidence gathered while running the sibling skills' cases. "Make my game feel better" in a scratch copy of godot-platformer: Skill(game-juice:juice-scan) first, then the scanner, and a 147-line `juice-report.md` (8 moments, 9 suggestions, S-01 coyote time and jump buffer). juice-principles' decoy-1 ("Scan my Godot project and tell me where to add juice"): 2/2, Skill(game-juice:juice-scan) first.
 - The engine reference edits in C-20261026-3 change sketches, not triggers or the scan flow, so the full suite was not re-run.

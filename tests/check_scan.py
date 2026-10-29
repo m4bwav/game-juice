@@ -34,8 +34,14 @@ EXPECT = {
                                 ("death", "Assets/Scripts/Enemy.cs", "Die"),
                                 ("attack", "Assets/Scripts/PlayerCombat.cs", "Attack")],
                       ["no_shake_toggle", "no_pitch_variation", "no_hit_stop"]),
+    "unity-deckbuilder": ("unity", [("card_play", "Assets/Scripts/HandView.cs", "OnCardPlayed"),
+                                    ("card_draw", "Assets/Scripts/HandView.cs", "AnimateSingleDraw"),
+                                    ("turn", "Assets/Scripts/HandView.cs", "OnTurnEnded")],
+                          []),
 }
 EXPECT_RISKS = {"unity-brawler": ["shake_per_frame"]}
+# Functions and folders that must never be reported: predicates, tests, editor-only tools.
+EXPECT_ABSENT = {"unity-deckbuilder": ["HasPendingDamageReveal", "TakeDamage_ReducesHp", "OnImportButtonPressed"]}
 
 
 def main() -> int:
@@ -61,6 +67,8 @@ def main() -> int:
         problems += [f"missing finding {f}" for f in findings if f not in got_f]
         got_r = {x["id"] for x in r.get("risks", [])}
         problems += [f"missing risk {x}" for x in EXPECT_RISKS.get(name, []) if x not in got_r]
+        got_fn = {m["function"] for m in r.get("moments", [])}
+        problems += [f"reported excluded function {fn}" for fn in EXPECT_ABSENT.get(name, []) if fn in got_fn]
         for m in r.get("moments", []):
             if not os.path.isfile(os.path.join(FIX, name, m["file"])):
                 problems.append(f"reported file does not exist: {m['file']}")
