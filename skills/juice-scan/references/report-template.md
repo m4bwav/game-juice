@@ -7,6 +7,8 @@ Back to [SKILL.md](../SKILL.md).
 
 Scanned <date> with juice_scan.py <version>. Engine: <engine> (<evidence>). Libraries: <list or none>.
 Moments found: <n> (<counts by moment>). Read in full: <n>. Intended feel: <one line, from the user or inferred>.
+Feel type (P-23): <control + space + polish | polish only, with one line of evidence>.
+Inferred properties (P-24, P-25): <speed, jump height, gravity, lives or HP, caps; each `value (file:line)` or `not found`>.
 
 ## Moment map
 

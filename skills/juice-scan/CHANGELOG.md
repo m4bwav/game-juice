@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261030-1 · 2026-10-30 · Feel-type classifier and inferred properties in the report
+- because: user request (ludowright's feel-handoff list, Swink items left after game-juice 1.2.0); P-23 to P-25
+- files: SKILL.md (Step 2), references/report-template.md (header)
+- Step 2 classifies the feel (control, space, polish) before judging and lists the movement and rule properties the code implies; the report header carries both. Triggers unchanged, so evals were not re-run.
+
 ### C-20261028-1 · 2026-10-28 · Scanner 1.1.0: card-game moments, tests and editor code skipped, predicates dropped
 - because: L-002, L-003, T-20261028-1
 - files: scripts/juice_scan.py (SKIP_DIRS, TEST_FILE, PREDICATE_NAME, MOMENTS, EXPECTED), tests/check_scan.py (unity-deckbuilder fixture, EXPECT_ABSENT)
