@@ -32,6 +32,8 @@ Open every `high` and `medium` moment's function, plus any `low` one that is the
 - what feedback actually exists, including what is called indirectly (an `AudioManager.Play`, an animator event, a signal another script connects to; grep for the callee),
 - timing: input-to-response frames, lockouts, hit-stop, coyote and buffer windows.
 
+Classify the feel before judging it (P-23): which of real-time control, simulated space and polish the game has. A game with polish only (cards, turns, menus) gets presentation goals: judge its UI, reveal and turn moments, not jump or aim timing. Then write down the properties the code implies (P-24, P-25): avatar speed, jump height, gravity, acceleration, lives or hit points, caps; give each with its file and line, or `not found`.
+
 Ask what the game is and what it should feel like when that isn't obvious (J1). A cosy farming game and a twitch shooter want different amounts of juice.
 
 ## Step 3: assess with the lenses
