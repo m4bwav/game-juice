@@ -1,6 +1,6 @@
 ---
 name: juice-principles
-description: "The game-juice knowledge base: why feedback and polish make interaction feel good (screen shake, hit-stop, squash and stretch, easing, camera kick, layered and pitch-varied sound, responsive UI, haptics, coyote time, input buffering) and when it becomes noise. Holds 22 medium-independent principles with book citations (Swink, Schell, Hodent, Rogers), Schell-style lenses, a table of starting parameters, accessibility limits for flashing and motion, and adapters for web UI, video and slides. Use it first, before answering from memory (it carries the cited numbers and the limits), whenever the user asks what game feel or juice is, why a technique works, for starting numbers (how much squash and stretch, how long a hit-stop, how strong a shake), whether an effect is too much or safe (screen flashes, photosensitivity, motion sickness), for a design critique of feel without scanning code, or says 'refresh juice-principles' / 'is juice-principles stale'. Codebase audit: juice-scan; implementing: juice-apply."
+description: "The game-juice knowledge base: why feedback and polish make interaction feel good (screen shake, hit-stop, squash and stretch, easing, camera kick, layered and pitch-varied sound, responsive UI, haptics, coyote time, input buffering) and when it becomes noise. Holds 27 medium-independent principles with book citations (Swink, Schell, Hodent, Rogers), Schell-style lenses, a table of starting parameters, accessibility limits for flashing and motion, and adapters for web UI, video and slides. Use it first, before answering from memory (it carries the cited numbers and the limits), whenever the user asks what game feel or juice is, why a technique works, for starting numbers (how much squash and stretch, how long a hit-stop, how strong a shake), whether an effect is too much or safe (screen flashes, photosensitivity, motion sickness), for a design critique of feel without scanning code, or says 'refresh juice-principles' / 'is juice-principles stale'. Codebase audit: juice-scan; implementing: juice-apply."
 ---
 
 # Juice principles
@@ -19,6 +19,7 @@ Read `evergreen.json` next to this file. If `contradiction` is set or today is o
 | "How much shake / hit-stop / squash?" | principles.md, parameter table |
 | "Is this too much?" / "it's noisy" / accessibility | principles.md section D, then lenses J11 and J12 |
 | Critique of one moment (described, no code) | [lenses.md](references/lenses.md): J1, J2, J6, J11, plus the 2-3 that fit |
+| "Why does this game feel floaty/stiff?" / take apart a game's feel | [feel-cases.md](references/feel-cases.md), then lenses J13 and J14 |
 | "Where does this idea come from?" | [sources.md](references/sources.md), then [RESEARCH.md](RESEARCH.md) for talks and articles |
 | A web page, video, or slide deck | [media/README.md](references/media/README.md) and the adapter for that medium (only games.md is complete; say so when using a stub) |
 
