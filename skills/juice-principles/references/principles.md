@@ -58,6 +58,16 @@ Each principle has an ID (`P-xx`) so reports can cite it in a few characters. Th
 
 **P-22 Space gives motion meaning.** Speed and weight only read against references: ground texture, parallax, nearby objects, collisions. In games: dust on the ground, speed lines, objects that react when the player brushes past. *Swink ch. 1 pp. 4-5.*
 
+**P-23 Classify the feel before tuning it.** Feel in the full sense needs three parts: real-time control, a simulated space, and polish. Something with only polish (a menu, a turn-based board, a slide deck) gets presentation goals, not control goals: promise "satisfying", never "tight". In games: say which parts a game has before scanning; a card game's feel moments are its UI and reveal moments. *Swink ch. 1.*
+
+**P-24 Space and motion are tuned as a pair.** Obstacle size, gap width and pickup spacing only feel right against the avatar's speed, jump height and turning radius, and a challenge that leans on the weakest part of the control (precise landings in 3D, say) stays unpleasant whatever the polish. In games: write down the movement metrics, build spaces from them, and keep targets several avatar widths wide where the control is loose. *Swink ch. 5; ch. 15 pp. 248-249.*
+
+**P-25 Rules are part of the feel.** Lives, hit points, rewards and caps change how control feels: one-hit death makes the avatar feel fragile, a high-value risky target pulls the player into close, skilled moves, a cap on shots alive turns range into fire rate. In games: when motion feels wrong, check the reward and damage rules before the tween curves. *Swink ch. 11; ch. 12 p. 198; ch. 14 p. 245; ch. 16 p. 295.*
+
+**P-26 Choose direct or simulated per axis.** Each input can set a value directly (position, facing) or add force to a simulation (velocity, acceleration). Mixing them, one axis crisp and one with inertia, is often where a distinctive feel comes from; perception-driven hacks (setting velocity mid-jump, extra rules on top of physics) are fine when they read better. In games: list each input with what it modulates and whether it is direct or simulated. *Swink ch. 7; ch. 12 pp. 188, 199; ch. 13 p. 228; ch. 15 p. 248.*
+
+**P-27 Build feel bottom-up.** Tune the core simulation in an empty space first, then build the world around its metrics, then reward the interactions players already enjoy, then link those rewards. Polish and scoring layered on an untuned core hide the problem (P-16). *Swink ch. 16 pp. 295-296; P-21.*
+
 ## Parameter starting points (tune by eye, then by playtest)
 
 These are starting values that published talks and the books converge on, not rules. They are dated in RESEARCH.md.

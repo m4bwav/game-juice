@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261030-1 · 2026-10-30 · Swink's case studies: P-23 to P-27, lenses J13-J14, feel-cases.md
+- because: user request (ludowright's feel-handoff list of what Swink adds); Swink ch. 1, 5, 11, 12-16 read
+- files: references/principles.md (P-23 to P-27), references/lenses.md (J13, J14), references/feel-cases.md (new), references/sources.md (Swink row), SKILL.md (description count, Step 1 row)
+- Added the feel-type classifier, context fit, rules as feel, direct versus simulated mappings and bottom-up tuning as principles, two lenses, and a method-only walk of the six areas drawn from the five case studies (no per-game numbers). Triggers unchanged apart from the count, so evals were not re-run.
+
 ### C-20261026-4 · 2026-10-26 · Published as part of the public game-juice repository
 - because: user request
 - files: TESTS.md (T-20261026-2)

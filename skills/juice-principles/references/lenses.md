@@ -78,6 +78,18 @@ Who is shut out or made ill by this?
 - Do flashes stay at or under 3 per second and avoid saturated red?
 - Is any meaning carried only by colour, sound, or vibration?
 
+### J13 · The Lens of Context Fit (P-22, P-24)
+Does the space fit the way the avatar moves?
+- Are gaps, ledges and targets sized from written movement metrics, or by eye?
+- Which challenges ask for the control's weakest move, and how often?
+- Does the camera ever lose the avatar in this space?
+
+### J14 · The Lens of the Six Areas (Swink, P-23, P-25, P-26)
+Which part of the feel is this complaint about?
+- Input, response, context, polish, metaphor or rules: which one, and is it measured?
+- For each input: direct or simulated, and what does it modulate?
+- Which rule (lives, damage, reward, caps) is shaping this motion?
+
 ## Writing a new lens
 
-Number it `J13` and up. Give it one framing line and three questions or fewer, tie it to at least one `P-` principle, and phrase it so another medium could use it. Log it in [CHANGELOG.md](../CHANGELOG.md).
+Number it `J15` and up. Give it one framing line and three questions or fewer, tie it to at least one `P-` principle, and phrase it so another medium could use it. Log it in [CHANGELOG.md](../CHANGELOG.md).

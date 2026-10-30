@@ -57,7 +57,7 @@ Then: **"Apply S-01."** juice-apply adds the change behind a `JuiceSettings` tog
 |---|---|---|
 | [juice-scan](skills/juice-scan/SKILL.md) | "make my game feel better", "add juice", "why does combat feel flat" | `juice-report.md`: moment map, quick wins, medium changes, signature moments, over-juice and accessibility findings. Each suggestion names the file and function, technique, principle, parameters, and an engine code sketch |
 | [juice-apply](skills/juice-apply/SKILL.md) | "apply S-03", "add coyote time", "do the quick wins" | the change in your code behind a `JuiceSettings` toggle with named constants and reduce-motion, shake, and flash options, plus `juice-changes.md` with revert notes |
-| [juice-principles](skills/juice-principles/SKILL.md) | "what is hit-stop?", "how much shake is too much?" | answers grounded in 22 medium-independent principles and 12 lenses, with book citations and starting parameters |
+| [juice-principles](skills/juice-principles/SKILL.md) | "what is hit-stop?", "how much shake is too much?" | answers grounded in 27 medium-independent principles and 14 lenses, with book citations and starting parameters |
 
 Engines in v1: **Unity (C#), Godot 4 (GDScript), Roblox (Luau), web (Phaser, PixiJS, GSAP), Pygame**, with lighter notes for LÖVE, Unreal, Defold, and GameMaker.
 
