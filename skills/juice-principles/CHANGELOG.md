@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261101-1 · 2026-11-01 · Game Engine Architecture 2e: P-28 bark and voice-line pools
+- because: user request (everscout game-design beat, Game Engine Architecture 2e learnings approved)
+- files: references/principles.md (P-28), references/sources.md (Gregory row)
+- P-28 covers line pools without repeats and priority-based interruption. Triggers unchanged, so evals were not re-run.
+
 ### C-20261031-1 · 2026-10-31 · The Gamer's Brain 2e: low-health effects, camera takeover, loss-beat reappraisal
 - because: user request (everscout game-design beat, The Gamer's Brain 2e learnings approved)
 - files: references/principles.md (P-18, P-19)

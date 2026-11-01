@@ -68,6 +68,8 @@ Each principle has an ID (`P-xx`) so reports can cite it in a few characters. Th
 
 **P-27 Build feel bottom-up.** Tune the core simulation in an empty space first, then build the world around its metrics, then reward the interactions players already enjoy, then link those rewards. Polish and scoring layered on an untuned core hide the problem (P-16). *Swink ch. 16 pp. 295-296; P-21.*
 
+**P-28 Spoken lines are a system, not a sound.** Barks and voice lines come from a pool per situation and skip any line heard recently, so an often-hit moment never repeats word for word. Each line carries a priority: an important one cuts off a minor one already playing, a minor one waits or is dropped and never cuts off the important one. In games: give each bark trigger several lines, a no-repeat memory and a priority, and let at most one voice talk per speaker. *Gregory, Game Engine Architecture 2e (2014), sec. 13.6.2; P-09.*
+
 ## Parameter starting points (tune by eye, then by playtest)
 
 These are starting values that published talks and the books converge on, not rules. They are dated in RESEARCH.md.

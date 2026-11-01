@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261101-1 · 2026-11-01 · Input path checks: dead zone, update-order lag, aim and collision
+- because: user request (Game Engine Architecture 2e learnings approved); P-16
+- files: SKILL.md (Step 4 control before polish)
+- Control checks now cover missing or over-wide dead zones and smoothing, a frame of lag from update order, and shots or hit boxes that disagree with what the player sees. Triggers unchanged, so evals were not re-run.
+
 ### C-20261031-1 · 2026-10-31 · Over-juice check for low-health overlays in combat
 - because: user request (The Gamer's Brain 2e learnings approved); P-18
 - files: SKILL.md (Step 4 over-juice)
