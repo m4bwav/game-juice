@@ -42,7 +42,7 @@ Load [juice-principles/references/lenses.md](../juice-principles/references/lens
 - **Gaps**: an expected channel missing (the scanner's `gaps`, after your reading).
 - **Over-juice**: the scanner's `risks`, plus effects that hide the avatar or threat, repeat identically, stack without a cap, or fire every frame (P-15 to P-17), and a low-health full-screen overlay or blur that stays on while the player is in combat (P-18).
 - **Access**: no reduce-motion or shake setting, flashes over 3 Hz, meaning carried by one channel only (P-18). Report these even when the user didn't ask.
-- **Control before polish**: latency, lockouts, or missing input forgiveness come first (P-16).
+- **Control before polish**: latency, lockouts, or missing input forgiveness come first (P-16). Check the input path too: raw stick values used with no dead zone (or one so wide the stick feels dull) and no smoothing; a camera or follower that reads its target before the target moves (Update against FixedUpdate, or script order), which adds a frame of lag; shots cast from the camera while the gun sits offset, or hit boxes that don't match the visible mesh (Gregory, Game Engine Architecture 2e (2014), sec. 8.5.2, 12.5.2-12.5.3, 15.6).
 
 ## Step 4: write the report
 
