@@ -40,7 +40,7 @@ Ask what the game is and what it should feel like when that isn't obvious (J1). 
 
 Load [juice-principles/references/lenses.md](../juice-principles/references/lenses.md) and [principles.md](../juice-principles/references/principles.md) (parameter table). Run J1, J2, J6, and J11 across the game, then the lenses that fit each moment (J4 for hits, J3 for jumps, J7 for score and UI, J9 for audio). Record:
 - **Gaps**: an expected channel missing (the scanner's `gaps`, after your reading).
-- **Over-juice**: the scanner's `risks`, plus effects that hide the avatar or threat, repeat identically, stack without a cap, or fire every frame (P-15 to P-17).
+- **Over-juice**: the scanner's `risks`, plus effects that hide the avatar or threat, repeat identically, stack without a cap, or fire every frame (P-15 to P-17), and a low-health full-screen overlay or blur that stays on while the player is in combat (P-18).
 - **Access**: no reduce-motion or shake setting, flashes over 3 Hz, meaning carried by one channel only (P-18). Report these even when the user didn't ask.
 - **Control before polish**: latency, lockouts, or missing input forgiveness come first (P-16).
 

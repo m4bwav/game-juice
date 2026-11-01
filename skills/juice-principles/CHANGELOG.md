@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261031-1 · 2026-10-31 · The Gamer's Brain 2e: low-health effects, camera takeover, loss-beat reappraisal
+- because: user request (everscout game-design beat, The Gamer's Brain 2e learnings approved)
+- files: references/principles.md (P-18, P-19)
+- P-18 now covers low-health overlays hiding the threat and signalled camera takeovers (none in VR); P-19 adds the loss beat that shows what went well. Triggers unchanged, so evals were not re-run.
+
 ### C-20261030-1 · 2026-10-30 · Swink's case studies: P-23 to P-27, lenses J13-J14, feel-cases.md
 - because: user request (ludowright's feel-handoff list of what Swink adds); Swink ch. 1, 5, 11, 12-16 read
 - files: references/principles.md (P-23 to P-27), references/lenses.md (J13, J14), references/feel-cases.md (new), references/sources.md (Swink row), SKILL.md (description count, Step 1 row)

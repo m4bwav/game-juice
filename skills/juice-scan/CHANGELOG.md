@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261031-1 · 2026-10-31 · Over-juice check for low-health overlays in combat
+- because: user request (The Gamer's Brain 2e learnings approved); P-18
+- files: SKILL.md (Step 4 over-juice)
+- The over-juice list flags a full-screen low-health overlay or blur that stays on during combat. Triggers unchanged, so evals were not re-run.
+
 ### C-20261030-1 · 2026-10-30 · Feel-type classifier and inferred properties in the report
 - because: user request (ludowright's feel-handoff list, Swink items left after game-juice 1.2.0); P-23 to P-25
 - files: SKILL.md (Step 2), references/report-template.md (header)
