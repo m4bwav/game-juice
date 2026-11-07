@@ -34,6 +34,10 @@ If the project has no juice settings yet, add the settings hook from the engine 
 - Pool particles and cap stacking (P-15).
 - Roblox: camera and UI effects go on the client, triggered by a RemoteEvent from the server when the moment is server-side.
 
+## Sfxwright, when installed
+
+If the sfxwright plugin is present, hand it the hit, pickup and UI events that need a sound or a variation set. Read its `sounds.json`: the takes with `picked: true` are the clips, and `randomize` gives the starting pitch and volume ranges for your named constants. Without it, apply pitch variation to the clips the game already has; the steps here work alone.
+
 ## Step 4: verify, then record
 
 1. Run the project's own check if it exists: Unity compile check (unity-agent-headless if installed), `godot --headless --check-only --script <file>` or an editor import, roblox-agent-checks (selene, luau-lsp), `npx tsc --noEmit` / `npm run build` / `npx eslint` for web, `python -m py_compile` for Pygame. If nothing can run here, say so and explain how to check it by hand.
