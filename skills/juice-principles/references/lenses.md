@@ -23,6 +23,7 @@ Does the action have a wind-up, a peak, and a settle?
 - Where is the anticipation? Is it short enough not to cost responsiveness?
 - What happens in the 100-300 ms after the peak?
 - Is the motion linear where an ease would sell the weight?
+- Do the feet slide? Does a knocked-back body step or glide?
 
 ### J4 · The Lens of Impact (P-04, P-07)
 When two things meet, does the user feel the force?

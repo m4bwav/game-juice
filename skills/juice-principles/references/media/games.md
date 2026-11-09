@@ -9,7 +9,7 @@ Back to [README.md](README.md). Principles: [../principles.md](../principles.md)
 | game.input | input read | timing (buffer, ≤100 ms response) | P-01, P-02, P-05 |
 | game.movement | walk, run, dash | visual (dust, trails), motion (accel/decel curves, lean), audio (footsteps) | P-14, P-22 |
 | game.jump | jump and land | motion (squash/stretch), audio, visual (dust), timing (coyote, buffer, variable height) | P-03, P-05 |
-| game.attack | swing, shoot, cast | audio, visual (muzzle flash, trail), camera (kick), animation (anticipation, recoil) | P-03, P-08 |
+| game.attack | swing, shoot, cast | audio, visual (muzzle flash, trail: optional, drop it when off-style, P-07), camera (kick), animation (anticipation, recoil) | P-03, P-08 |
 | game.hit | contact and damage | timing (hit-stop), visual (flash, sparks), camera (shake), audio, UI (numbers), haptic, knockback | P-04, P-06, P-07, P-10 |
 | game.death | enemy or player dies | visual (burst, ragdoll, corpse permanence), audio, camera, timing (slow-mo on the last kill) | P-11 |
 | game.pickup | collect | audio (rising pitch on streaks), visual (sparkle), motion (pop, fly-to-HUD), UI | P-08, P-09 |
