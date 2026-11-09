@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261109-1 · 2026-11-09 · Locomotion sync, stepped knockback, hit-stop on fast hits, wind-up start values
+- because: user request (technique-harvest post 1xajfgh, idea credited, no code copied)
+- files: references/principles.md (parameter table), references/lenses.md (J3), references/media/games.md (game.attack)
+- Added locomotion sync, stepped knockback and wind-up/swing start rows (the last marked tune-by-eye, no published source), the hit-stop note for fast repeated hits, two J3 questions, and trails as optional. Triggers unchanged, so evals were not re-run.
+
 ### C-20261101-1 · 2026-11-01 · Game Engine Architecture 2e: P-28 bark and voice-line pools
 - because: user request (everscout game-design beat, Game Engine Architecture 2e learnings approved)
 - files: references/principles.md (P-28), references/sources.md (Gregory row)

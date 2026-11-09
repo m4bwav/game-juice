@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261109-1 · 2026-11-09 · Step 2 checks foot sliding, stepped knockback and hit-stop on fast hits
+- because: user request (technique-harvest post 1xajfgh)
+- files: SKILL.md (Step 2)
+- One bullet asks the reader to confirm these on movement and hit moments. Triggers unchanged, so evals were not re-run.
+
 ### C-20261101-1 · 2026-11-01 · Input path checks: dead zone, update-order lag, aim and collision
 - because: user request (Game Engine Architecture 2e learnings approved); P-16
 - files: SKILL.md (Step 4 control before polish)

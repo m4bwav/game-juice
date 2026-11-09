@@ -76,7 +76,7 @@ These are starting values that published talks and the books converge on, not ru
 
 | Technique | Start | Notes |
 |---|---|---|
-| Hit-stop | 2-6 frames (33-100 ms) light; 8-15 frames heavy | buffer input during it; scale with damage (P-04) |
+| Hit-stop | 2-6 frames (33-100 ms) light; 8-15 frames heavy | buffer input during it; scale with damage (P-04); shorten or skip on fast repeated hits (light weapons, high fire rate), since stacked freezes read as stutter |
 | Screen shake (trauma model) | trauma += 0.2-0.5 per hit, decays 1.0-1.5 per s; offset = max × trauma² × noise | max offset 4-12 px (2D) or 0.1-0.3 units; rotation ≤ 3°; Perlin noise beats white noise (Eiserloh 2016) |
 | Camera kick | 2-6 px away from shot direction, recover over 80-150 ms | directional, unlike shake |
 | Squash/stretch | 1.2-1.4 × along motion, inverse on the other axis, 80-150 ms back | preserve volume |
@@ -86,6 +86,9 @@ These are starting values that published talks and the books converge on, not ru
 | Pitch variation | ±5-10% random per play | P-09 |
 | Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05 |
 | Particles on impact | 6-20 particles, 0.2-0.5 s life, pooled | P-15: fewer, bigger, shorter |
+| Locomotion sync | animation rate = ground speed / clip stride speed; blend walk and run by speed | root motion or foot IK keeps feet planted; sliding feet read as weightless (P-07, P-14) |
+| Knockback | reaction clip with 1-3 back steps whose travel matches the push | never slide an idle pose across the floor (P-03, P-07) |
+| Attack wind-up / swing | wind-up at 0.6-0.8x clip speed, swing at 1.2-1.5x | no source gives numbers; a community start value (Reddit r/gamedev thread 1xajfgh, 2026), tune by eye (P-03) |
 | Scene transition | 250-500 ms ease-in-out fade or wipe; audio fade with it | P-03 |
 
 ## Adding a principle
