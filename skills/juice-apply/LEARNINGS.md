@@ -13,3 +13,10 @@ Write an entry the moment a real signal happens: a user correction, the same err
 - Evidence: T-20261026-2, T-20261026-3, C-20261026-2, C-20261026-3
 - Scope: skill
 - Status: active · helpful 1 · harmful 0 · last_confirmed 2026-10-26
+
+### L-002 · 2026-11-11 · Juice for a mod or level with no game code: build it from the level's own data objects
+- Trigger: the "game" is a map or mod for someone else's engine (a MADNESS: Project Nexus SceneTools level), so there is no code to add hit-stop, shake or particles to.
+- Rule: look for the engine's data-driven feedback objects (destructibles, togglables, sound names, flash on hit) and juice the set with them: shootable glass, lamps and screens that swap to a broken state with a built-in sound and a hit flash. Keep it cosmetic (bullets pass through, no damage bar, no popup, no explosion) so fights play the same, put the toggle and hit counts as named constants in the level generator, and pick only props the source material already has. Ask for one play that checks sound, flash, swap, no marker icon, and bullets still reaching enemies behind.
+- Evidence: madnesswright examples/NexusProminence `Breakable` and juice-changes.md; owner play 2026-11-11 passed ("play test went well"), log clean; released to Steam Workshop the same day. madnesswright L-20261111-3 `shootable-set-pieces`.
+- Scope: skill
+- Status: active · helpful 1 · harmful 0 · last_confirmed 2026-11-11
