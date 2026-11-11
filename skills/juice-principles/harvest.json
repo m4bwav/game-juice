@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "kind": "reddit",
+      "sub": "aigamedev",
+      "keep": "game feel and juice techniques"
+    }
+  ]
+}
