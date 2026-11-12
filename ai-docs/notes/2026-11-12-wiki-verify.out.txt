@@ -1,0 +1,54 @@
+== scan godot --md
+# Juice scan: godot-platformer
+
+Engine: **godot** (project.godot). Files: 3, functions: 9. Libraries: none found.
+
+| Moment | File | Function | Line | Has | Gaps | Conf. |
+|---|---|---|---|---|---|---|
+| hit | scripts/player.gd | `take_damage` | 29 | - | timing, visual, camera, audio, ui, haptic | high |
+| pickup | scripts/coin.gd | `collect` | 13 | - | audio, visual, motion, ui | high |
+| jump | scripts/player.gd | `jump` | 24 | - | motion, audio, visual, timing | high |
+| movement | scripts/player.gd | `_physics_process` | 11 | - | visual, motion, audio | high |
+| score | scripts/hud.gd | `add_score` | 7 | ui | motion, audio | high |
+| death | scripts/player.gd | `die` | 35 | - | visual, audio, camera, timing | medium |
+| ui_button | scripts/hud.gd | `_on_start_button_pressed` | 12 | - | motion, audio | medium |
+| input | scripts/player.gd | `_unhandled_input` | 19 | - | timing | medium |
+
+## Project findings
+
+- **no_coyote_time** (medium): Jumping exists but no coyote-time grace window was found.
+- **no_jump_buffer** (medium): Jumping exists but no jump/input buffer was found.
+- **no_hit_stop** (medium): Hits exist but no hit-stop / freeze-frame was found.
+== scan godot jump moment
+{
+ "moment": "jump",
+ "also": [],
+ "file": "scripts/player.gd",
+ "function": "jump",
+ "line": 24,
+ "lines": 5,
+ "language": "gdscript",
+ "feedback": {},
+ "gaps": [
+  "motion",
+  "audio",
+  "visual",
+  "timing"
+ ],
+ "confidence": "high"
+}
+== scan keys
+tool version scanned_at root engine libraries files_scanned functions_seen vendor_dirs_skipped moment_counts moments project_flags findings risks note
+== scan missing
+{"tool": "juice_scan.py", "version": "1.1.0", "error": "FileNotFoundError: not a directory: does/not/exist"}
+== check_scan
+ok   godot-platformer: godot, 8 moments, findings ['no_coyote_time', 'no_hit_stop', 'no_jump_buffer']
+ok   roblox-obby: roblox, 6 moments, findings ['no_coyote_time', 'no_hit_stop', 'no_jump_buffer']
+ok   phaser-shooter: phaser, 4 moments, findings ['no_hit_stop']
+ok   pygame-dodge: pygame, 4 moments, findings ['no_coyote_time', 'no_hit_stop', 'no_jump_buffer']
+ok   unity-brawler: unity, 5 moments, findings ['no_hit_stop', 'no_pitch_variation', 'no_shake_toggle']
+ok   unity-deckbuilder: unity, 3 moments, findings []
+ok   fail-soft
+PASS
+== check_skills
+ok: 3 skills, companions, manifests, links and text guards

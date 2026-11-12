@@ -8,6 +8,8 @@
 
 Skills that study a game's codebase and suggest **juice**: the feedback and polish that make playing feel good without changing the rules. That covers screen shake, hit-stop, particles, squash and stretch, easing, camera kick, layered and pitch-varied sound, UI that answers input, transitions, haptics, coyote time, and input buffering. It also flags over-juicing: effects that hurt readability, accessibility, or frame time.
 
+Docs: [the wiki](https://github.com/m4bwav/game-juice/wiki), including [how it works with other plugins](https://github.com/m4bwav/game-juice/wiki/Works-With).
+
 Works with Claude Code, Copilot, Codex, Cursor, and anything that reads Agent Skills. Each skill is an evergreen unit: it re-researches its subject on a schedule, records lessons, and carries the evals that prove it triggers and acts.
 
 ## Install
