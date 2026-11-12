@@ -7,3 +7,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-27] add | solution: Skill undertriggers on small repos and direct edit requests
 ## [2026-10-27] add | decision: Publish game-juice as a public repository
 ## [2026-10-27] update | Published as a public repository; HANDOFF rewritten
+
+## [2026-11-12] docs | GitHub wiki (9 pages, 1.3.5), social preview, Works-with sections on sfxwright/ludowright/grindwright/madnesswright wikis
