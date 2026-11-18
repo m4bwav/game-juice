@@ -44,6 +44,10 @@ Do not load every file. The point of the split is that a question about hit-stop
 
 Principles and lenses are medium-independent by design. A new medium gets an adapter file under `references/media/` (shape in media/README.md) and, once it has a scanner, its own skill. Never fork the principles per medium.
 
+## YouTube videos
+
+GDC juice talks show the effects; clip reads what the captions cannot. Use fetchwright's `yt.py read URL` (captions, chapters, `&t=` links; opt-in route) and `yt.py clip URL A-B "question"` (Gemini reads the screen for spans of 2 minutes or less). Cite the `&t=` link and check numbers against a written source: auto-captions drop decimals.
+
 ## Maintenance
 
 Evergreen unit, protocol from the installed evergreen plugin (pointer mode; see [MAINTENANCE.md](MAINTENANCE.md)). Companions: [RESEARCH.md](RESEARCH.md), [CHANGELOG.md](CHANGELOG.md), [LEARNINGS.md](LEARNINGS.md), [TESTS.md](TESTS.md), `evals/evals.json`, `evergreen.json`.
