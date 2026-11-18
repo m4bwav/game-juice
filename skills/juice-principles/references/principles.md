@@ -82,7 +82,7 @@ These are starting values that published talks and the books converge on, not ru
 | Squash/stretch | 1.2-1.4 × along motion, inverse on the other axis, 80-150 ms back | preserve volume |
 | UI press | scale 0.9-0.95 down 50 ms, back with ease-out-back 120-200 ms | plus a click sound |
 | Pickup | pop scale 1.3 then 0, 150-250 ms; pitch climbs on a streak | P-09, P-11 |
-| Damage flash | white or tint for 1-3 frames (≤ 100 ms) | never full screen faster than 3 Hz (P-18) |
+| Damage flash | white or tint for 1-3 frames (≤ 100 ms) | never full screen faster than 3 Hz (P-18); Godot: `modulate` above 1 is the cheap flash, but it multiplies colour so dark pixels stay dark; a flash shader gives true white |
 | Pitch variation | ±5-10% random per play | P-09 |
 | Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05 |
 | Particles on impact | 6-20 particles, 0.2-0.5 s life, pooled | P-15: fewer, bigger, shorter |
