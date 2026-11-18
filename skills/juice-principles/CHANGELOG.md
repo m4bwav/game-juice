@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261118-1 · 2026-11-18 · Frame-rate independent smooth follow row (1.3.7)
+- because: user request (technique-harvest book round 21: Sung and others, Build Your Own 2D Game Engine, 2nd ed., ch. 3 and 7, whose lerp relies on a fixed update rate; measured: a 0.1 per-frame fraction reaches 79%, 96% and 100% of the way after 0.5 s at 30, 60 and 144 fps, the exp form 96% at all three)
+- files: references/principles.md (parameter table)
+- Adds one parameter row: smoothing by 1 - exp(-rate × dt) or in the fixed update. Triggers unchanged, so evals were not re-run.
+
 ### C-20261117-1 · 2026-11-17 · Elastic return, procedural waddle row, Godot modulate flash note
 - because: R-20261117-1 (technique-harvest post yt-LhJVhk-BiIo, user request)
 - files: references/principles.md (parameter table), RESEARCH.md
