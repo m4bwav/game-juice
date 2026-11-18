@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261117-1 · 2026-11-17 · Elastic return, procedural waddle row, Godot modulate flash note
+- because: R-20261117-1 (technique-harvest post yt-LhJVhk-BiIo, user request)
+- files: references/principles.md (parameter table), RESEARCH.md
+- Squash/stretch notes gain the 150-250 ms elastic return, a new procedural waddle or bob row, and the damage flash notes the Godot modulate caveat. Triggers unchanged, so evals were not re-run.
+
 ### C-20261110-1 · 2026-11-10 · harvest.json: technique-harvest targets for this unit
 - because: user request 2026-11-10: plugins store their own technique-harvest targets (evergreen 1.1.0 harvest.json)
 - files: harvest.json (new)

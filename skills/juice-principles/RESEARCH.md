@@ -53,6 +53,13 @@ Best sources (primary first): GDC Vault, the speakers' own sites and channels (g
 
 Newest first. One entry per material finding. `Track` is subject, tooling, practice, or testing. All dates accessed: 2026-10-26.
 
+### R-20261117-1 · 2026-11-17 · Practice: elastic return, scale waddle, Godot modulate flash
+- Summary: Matula Games, "Squash and stretch, Juice in Godot #1" (YouTube short, 2026-11-06): on hit, scale to 1.25 wide x 0.75 tall in 0.06 s, back over about 0.2 s with an elastic ease; `modulate` set to 2 then back in 0.15 s; a walk made only from a sine dip in height. Ideas and numbers only, no code copied. Basis for the elastic-return note, the waddle row and the Godot flash caveat in the parameter table.
+- Track: practice
+- Sources: https://www.youtube.com/watch?v=LhJVhk-BiIo
+- Magnitude: minor
+- Applied: C-20261117-1
+
 ### R-20261026-6 · 2026-10-26 · XAG 117 and 118, read directly
 - Summary: XAG 117 (visual distractions and motion settings): avoid camera shake, camera bob, motion blur and similar effects, or provide an option to turn them off; avoid repetitive side-to-side or up-and-down movement not core to play (weapon sway, head bob); provide adjustable field of view; let players pause, hide or disable moving, blinking or auto-updating content behind text. Its examples show 0-100% sliders (radial blur, shake, speed lines), so a slider is good practice and an off option is the requirement. XAG 118 (photosensitivity): a flash is a 10% luminance change; failure is roughly more than 3 flashes per second over roughly 20% or more of the screen, with a stricter saturated-red rule and a spatial-pattern rule (high-contrast bands over about 20% of the screen); fixes are less contrast, lower frequency, smaller area. It lists the Harding FPA test as a tool. This confirms P-18, lens J12, and juice-apply's accessibility table; the earlier summary overstated XAG 117 as asking for sliders.
 - Track: subject
