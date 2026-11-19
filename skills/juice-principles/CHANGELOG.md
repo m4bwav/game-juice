@@ -2,7 +2,12 @@
 
 Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with the reason. Reasons cite findings in [RESEARCH.md](RESEARCH.md) (`R-`), lessons in [LEARNINGS.md](LEARNINGS.md) (`L-`), and test runs in [TESTS.md](TESTS.md) (`T-`). State in `evergreen.json`. Protocol: MAINTENANCE.md.
 
-Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
+Entry shape: `### C-20261118-2 · 2026-11-18 · Damage through controls, shield ripples, bullet holes, audio param dedupe rows (1.3.9)
+- because: user request (technique-harvest three-repos batch G: GPU-Bandits by sloppysteaks69, no licence, and voidstruck; ideas only, written fresh)
+- files: references/principles.md (parameter table)
+- Four parameter rows: low-health handling (steering slow-down, sine aim drift) as an alternative to shake, multi-hit shield ripples and persistent bullet holes pointing to threewright recipes, and the 1% change gate for per-frame audio params. Triggers unchanged, so evals were not re-run.
+
+### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
 ### C-20261118-1 · 2026-11-18 · Frame-rate independent smooth follow row (1.3.7)
 - because: user request (technique-harvest book round 21: Sung and others, Build Your Own 2D Game Engine, 2nd ed., ch. 3 and 7, whose lerp relies on a fixed update rate; measured: a 0.1 per-frame fraction reaches 79%, 96% and 100% of the way after 0.5 s at 30, 60 and 144 fps, the exp form 96% at all three)

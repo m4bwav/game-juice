@@ -9,3 +9,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-10-27] update | Published as a public repository; HANDOFF rewritten
 
 ## [2026-11-12] docs | GitHub wiki (9 pages, 1.3.5), social preview, Works-with sections on sfxwright/ludowright/grindwright/madnesswright wikis
+
+## [2026-11-18] update | 1.3.9: damage through controls, shield ripples, bullet holes, audio param dedupe (technique-harvest batch G; GPU-Bandits and voidstruck ideas only)

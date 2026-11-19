@@ -90,6 +90,10 @@ These are starting values that published talks and the books converge on, not ru
 | Locomotion sync | animation rate = ground speed / clip stride speed; blend walk and run by speed | root motion or foot IK keeps feet planted; sliding feet read as weightless (P-07, P-14) |
 | Knockback | reaction clip with 1-3 back steps whose travel matches the push | never slide an idle pose across the floor (P-03, P-07) |
 | Attack wind-up / swing | wind-up at 0.6-0.8x clip speed, swing at 1.2-1.5x | no source gives numbers; a community start value (Reddit r/gamedev thread 1xajfgh, 2026), tune by eye (P-03) |
+| Damage felt through controls | below about 35% armour or health: turn rate × 0.6-0.8 and aim offset = amp × sin(t × 2-4 Hz), amp growing as health falls | an alternative to camera shake: the hurt shows in handling, not in the view. Fades back as health returns; give it its own accessibility toggle (idea from GPU-Bandits, sloppysteaks69, no licence: idea only) (P-04, P-18) |
+| Shield hits | up to 4 ripple rings at once, each from its own hit point, radius growing over 0.3-0.6 s while fading; holes and a warmer tint as strength drops | rings that replace each other read as one hit; keep a small ring buffer. Shader recipe: threewright-shaders (idea from GPU-Bandits) (P-06, P-07) |
+| Bullet holes | persistent marks capped at 16-32, oldest recycled; glowing rim that cools over 1-2 s | lasting damage proves the hit landed. Shader recipe: threewright (idea from GPU-Bandits) (P-07) |
+| Audio tied to motion | each frame, ramp a param (pitch, gain, filter) only when the new target differs from the last one sent by more than 1% | caching the last target keeps per-frame calls from stacking scheduled ramps (Web Audio `setTargetAtTime`); idea from voidstruck (P-09) |
 | Scene transition | 250-500 ms ease-in-out fade or wipe; audio fade with it | P-03 |
 
 ## Adding a principle

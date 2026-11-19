@@ -8,6 +8,7 @@ Back to [SKILL.md](../SKILL.md). Sources and dates: [RESEARCH.md](../RESEARCH.md
 | Reduce motion | off, or on when the OS/browser asks (`prefers-reduced-motion`, Roblox `GuiService.ReducedMotionEnabled`) | shake 0, kick 0, head bob 0, tween durations halved, no parallax | WCAG 2.2 SC 2.3.3; XAG 117 |
 | Flashes | on, capped | flashes covering about 20% of the screen or more stay at 3 per second or fewer, no saturated red flash; off turns full-screen flashes into a vignette or nothing | WCAG 2.2 SC 2.3.1; XAG 118 |
 | Hit-stop | on | some players find freezes disorienting; off keeps every other channel | practitioner convention |
+| Damage through controls | on, with its own toggle | low-health steering slow-down and aim drift (juice-principles parameter table) can be switched off without losing shake or flash; never apply it where precise aim is an accessibility need | practitioner convention |
 | Haptics | on, intensity slider where the platform allows | | XAG; GAG |
 | Important sounds | | give every gameplay-critical sound a visual cue (P-06) | GAG hearing items |
 
