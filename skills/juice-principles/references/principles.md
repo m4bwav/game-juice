@@ -70,6 +70,8 @@ Each principle has an ID (`P-xx`) so reports can cite it in a few characters. Th
 
 **P-28 Spoken lines are a system, not a sound.** Barks and voice lines come from a pool per situation and skip any line heard recently, so an often-hit moment never repeats word for word. Each line carries a priority: an important one cuts off a minor one already playing, a minor one waits or is dropped and never cuts off the important one. In games: give each bark trigger several lines, a no-repeat memory and a priority, and let at most one voice talk per speaker. *Gregory, Game Engine Architecture 2e (2014), sec. 13.6.2; P-09.*
 
+**P-29 Tune feel from one frozen table; launches reset forgiveness together.** Feel numbers scattered through the code drift apart and nobody can tune them, so keep them in one named, read-only table (coyote, buffer, held-jump lift, launch squash, step heights) that a designer can read in one screen. Forgiveness windows are state, and state leaks: every event that throws the player upward (jump, spring, bounce, stomp, launch pad) clears the coyote timer, the jump buffer and any stomp flag in the same call, so a buffered press cannot fire a second jump on top of a spring. In games: a frozen constants object or resource, and one `launch(v)` helper that every upward path calls. *Thorson 2018 (forgiveness); P-05, P-27; pattern seen in a commercial web platformer, idea only.*
+
 ## Parameter starting points (tune by eye, then by playtest)
 
 These are starting values that published talks and the books converge on, not rules. They are dated in RESEARCH.md.
@@ -85,7 +87,9 @@ These are starting values that published talks and the books converge on, not ru
 | Pickup | pop scale 1.3 then 0, 150-250 ms; pitch climbs on a streak | P-09, P-11 |
 | Damage flash | white or tint for 1-3 frames (≤ 100 ms) | never full screen faster than 3 Hz (P-18); Godot: `modulate` above 1 is the cheap flash, but it multiplies colour so dark pixels stay dark; a flash shader gives true white |
 | Pitch variation | ±5-10% random per play | P-09 |
-| Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05 |
+| Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05; a held jump adds lift while the button stays down; every launch clears both timers (P-29) |
+| Launch squash | scale 1 ± 0.3-0.35 on the launch frame, back in 80-150 ms | the same value for jump, spring and bounce keeps them reading as one family (P-29) |
+| Step up / step down | step up about 0.6 units, snap down about 0.5, probed in 0.04-unit increments | small lips stop catching the feet; probe from high to low and keep the first clear height (P-05, P-29) |
 | Particles on impact | 6-20 particles, 0.2-0.5 s life, pooled | P-15: fewer, bigger, shorter |
 | Locomotion sync | animation rate = ground speed / clip stride speed; blend walk and run by speed | root motion or foot IK keeps feet planted; sliding feet read as weightless (P-07, P-14) |
 | Knockback | reaction clip with 1-3 back steps whose travel matches the push | never slide an idle pose across the floor (P-03, P-07) |

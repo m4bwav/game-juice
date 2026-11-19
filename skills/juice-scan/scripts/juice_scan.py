@@ -19,7 +19,7 @@ import re
 import sys
 from datetime import datetime
 
-VERSION = "1.1.0"
+VERSION = "1.2.0"
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "Library", "Temp", "Logs", "obj", "bin",
@@ -240,6 +240,14 @@ PROJECT_CHECKS = {
 }
 PROJECT_RX = {k: re.compile(v) for k, v in PROJECT_CHECKS.items()}
 
+# Feel constants written as bare literals: a name that tunes feel, assigned a number.
+FEEL_LITERAL_RX = re.compile(
+    r"(?i)\b\w*(coyote|jump_?buffer|squash|stretch|jump_?(?:velocity|force|speed|height|lift)|"
+    r"hold_?lift|step_?(?:up|down)|hit_?stop|shake)\w*\s*[:=]\s*-?\d*\.?\d+\b")
+# Launch events: anything besides the plain jump that throws the player upward.
+LAUNCH_NAME_RX = re.compile(r"(?i)spring|bounce|launch|stomp|trampoline|jump_?pad|boost")
+UPWARD_RX = re.compile(r"(?i)velocity\.y|vel\.y|\bvy\b|velocity_y|setVelocityY|AssemblyLinearVelocity|\.velocity\s*=")
+
 # Over-juice / risk heuristics, checked line by line.
 RISKS = [
     ("timescale_zero", r"(timeScale|time_scale)\s*=\s*0(\.0)?\b", "Time is frozen here; confirm it is restored on every path (including scene change and pause) or the game can lock."),
@@ -323,6 +331,8 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
     moments = []
     risks = []
     func_count = 0
+    feel_literal_files = []
+    launches = []
 
     for path in files:
         rel = os.path.relpath(path, root).replace("\\", "/")
@@ -338,6 +348,8 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
             if m and len(project_flags[k]) < 5:
                 line = text.count("\n", 0, m.start()) + 1
                 project_flags[k].append(f"{rel}:{line}")
+        if FEEL_LITERAL_RX.search(text):
+            feel_literal_files.append(rel)
         lines = text.splitlines()
         for name, start, end in split_functions(lines, lang):
             func_count += 1
@@ -352,6 +364,9 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
                     risks.append({"id": "spawn_in_update", "file": rel, "function": name, "line": start, "why": RISKS[1][2]})
                 if (SHAKE_CALL.search(body) or JITTER_RX.search(body)) and not re.search(r"\bif\b", body):
                     risks.append({"id": "shake_per_frame", "file": rel, "function": name, "line": start, "why": RISKS[2][2]})
+            if LAUNCH_NAME_RX.search(short) and UPWARD_RX.search(body):
+                resets = [k for k in ("coyote", "buffer") if re.search(k, body, re.I)]
+                launches.append({"file": rel, "function": name, "line": start, "resets": resets})
             cls = classify(name, body, rel, end - start)
             if not cls:
                 continue
@@ -393,6 +408,17 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
             findings.append({"id": "no_jump_buffer", "severity": "medium", "why": "Jumping exists but no jump/input buffer was found."})
     if any(m["moment"] == "hit" for m in moments) and not project_flags["hit_stop"]:
         findings.append({"id": "no_hit_stop", "severity": "medium", "why": "Hits exist but no hit-stop / freeze-frame was found."})
+
+    if len(feel_literal_files) >= 2:
+        findings.append({"id": "scattered_feel_constants", "severity": "low",
+                         "why": "Feel numbers (coyote, buffer, squash, jump lift, step, shake) are set as literals in several files; gather them in one frozen tuning table (P-29).",
+                         "where": feel_literal_files[:8]})
+    if project_flags["coyote_time"] or project_flags["jump_buffer"]:
+        leaky = [f"{x['file']}:{x['line']} {x['function']}" for x in launches if len(x["resets"]) < 2]
+        if leaky:
+            findings.append({"id": "launch_without_timer_reset", "severity": "medium",
+                             "why": "A spring, bounce or launch path sets upward velocity without clearing both the coyote and jump-buffer timers, so a buffered jump can fire on top of it (P-29).",
+                             "where": leaky[:8]})
 
     by_moment: dict[str, int] = {}
     for m in moments:

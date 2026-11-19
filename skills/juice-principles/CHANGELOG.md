@@ -7,6 +7,11 @@ Entry shape: `### C-20261118-2 · 2026-11-18 · Damage through controls, shield 
 - files: references/principles.md (parameter table)
 - Four parameter rows: low-health handling (steering slow-down, sine aim drift) as an alternative to shake, multi-hit shield ripples and persistent bullet holes pointing to threewright recipes, and the 1% change gate for per-frame audio params. Triggers unchanged, so evals were not re-run.
 
+### C-20261119-2 · 2026-11-19 · Frozen feel table and launch timer resets (1.3.11)
+- because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
+- files: references/principles.md (P-29, parameter table)
+- P-29 teaches one frozen feel table and resetting forgiveness timers together on every launch; parameter rows for held-jump lift, launch squash and step up/down. Triggers unchanged, so evals were not re-run.
+
 ### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
 ### C-20261119-1 · 2026-11-19 · Hit-stop: shake through the freeze, snap into contact (1.3.10)

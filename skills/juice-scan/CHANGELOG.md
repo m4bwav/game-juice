@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261119-2 · 2026-11-19 · Frozen feel table and launch timer resets (1.3.11)
+- because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
+- files: scripts/juice_scan.py (1.2.0), tests/check_scan.py, tests/fixtures/web-platformer
+- New findings scattered_feel_constants (feel literals in two or more files) and launch_without_timer_reset (spring/bounce/launch paths that set upward velocity without clearing coyote and buffer), with a fixture that trips both. Triggers unchanged, so evals were not re-run.
+
 ### C-20261118-1 · 2026-11-18 · Web reference: occluder silhouette and off-screen pointers (1.3.8)
 - because: user request (technique-harvest posts robinduckett-3 and robinduckett-5; idea source robinduckett/boo-mas, which has no licence, so written in our own words with no code copied)
 - files: references/engines/web.md (Readability in 3D and wide worlds)

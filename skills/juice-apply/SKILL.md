@@ -27,7 +27,7 @@ If the project has no juice settings yet, add the settings hook from the engine 
 ## Step 3: implement
 
 - Hook into the function the report named, matching the file's style (indentation, naming, language level).
-- Put every number in a named constant or serialized field at the top of the class or script, with the starting value from the report (`HIT_STOP_SECONDS = 0.05`). No magic numbers in the effect code.
+- Put every number in a named constant or serialized field at the top of the class or script, with the starting value from the report (`HIT_STOP_SECONDS = 0.05`). No magic numbers in the effect code. Feel numbers go in one frozen table (P-29), and any new spring, bounce or launch path clears the coyote and jump-buffer timers in the same call.
 - Gate every effect on its setting. Shake and kick go through `shake()` (0 under reduce motion). Flashes check `flashes` and stay at 3 per second or fewer. Hit-stop checks `hitStop`.
 - Keep feedback out of game rules. Damage, scores, and collisions must behave the same with every toggle off (that is what makes it juice). With the toggles off, the game must play exactly as before.
 - Anything that touches time (hit-stop, slow-mo) restores it on every path, including scene change and death. Note the engine traps in the reference.

@@ -34,6 +34,8 @@ EXPECT = {
                                 ("death", "Assets/Scripts/Enemy.cs", "Die"),
                                 ("attack", "Assets/Scripts/PlayerCombat.cs", "Attack")],
                       ["no_shake_toggle", "no_pitch_variation", "no_hit_stop"]),
+    "web-platformer": ("phaser", [("jump", "src/Player.js", "jump")],
+                       ["scattered_feel_constants", "launch_without_timer_reset"]),
     "unity-deckbuilder": ("unity", [("card_play", "Assets/Scripts/HandView.cs", "OnCardPlayed"),
                                     ("card_draw", "Assets/Scripts/HandView.cs", "AnimateSingleDraw"),
                                     ("turn", "Assets/Scripts/HandView.cs", "OnTurnEnded")],
