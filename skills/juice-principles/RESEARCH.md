@@ -53,6 +53,13 @@ Best sources (primary first): GDC Vault, the speakers' own sites and channels (g
 
 Newest first. One entry per material finding. `Track` is subject, tooling, practice, or testing. All dates accessed: 2026-10-26.
 
+### R-20261119-1 · 2026-11-19 · Practice: shake through hit-stop, snap into contact
+- Summary: patch-gg/pixelfx (MIT), src/core/act.js and the act data in src/fx (timing credited to rehan-remade/hollow-crown, MIT), measured over 62 hits: freeze min 0.015 s, median 0.08 s, max 0.22 s; shake (2-4 px) keeps counting down during the freeze; contact pose keyed "snap" 0.02 s after an eased pre-contact key. Confirms the existing hit-stop range; adds the shake and snap notes. Read only, nothing copied.
+- Track: practice
+- Sources: https://github.com/patch-gg/pixelfx
+- Magnitude: minor
+- Applied: C-20261119-1
+
 ### R-20261117-1 · 2026-11-17 · Practice: elastic return, scale waddle, Godot modulate flash
 - Summary: Matula Games, "Squash and stretch, Juice in Godot #1" (YouTube short, 2026-11-06): on hit, scale to 1.25 wide x 0.75 tall in 0.06 s, back over about 0.2 s with an elastic ease; `modulate` set to 2 then back in 0.15 s; a walk made only from a sine dip in height. Ideas and numbers only, no code copied. Basis for the elastic-return note, the waddle row and the Godot flash caveat in the parameter table.
 - Track: practice
