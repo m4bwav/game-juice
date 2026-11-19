@@ -9,6 +9,11 @@ Entry shape: `### C-20261118-2 · 2026-11-18 · Damage through controls, shield 
 
 ### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261119-1 · 2026-11-19 · Hit-stop: shake through the freeze, snap into contact (1.3.10)
+- because: R-20261119-1 (technique-harvest post pa20-p5-hit-timing, user request)
+- files: references/principles.md (parameter table, Hit-stop row), RESEARCH.md
+- The Hit-stop notes gain shake running through the freeze (2-4 px) and an uneased snap to the contact pose. Triggers unchanged, so evals were not re-run.
+
 ### C-20261118-1 · 2026-11-18 · Frame-rate independent smooth follow row (1.3.7)
 - because: user request (technique-harvest book round 21: Sung and others, Build Your Own 2D Game Engine, 2nd ed., ch. 3 and 7, whose lerp relies on a fixed update rate; measured: a 0.1 per-frame fraction reaches 79%, 96% and 100% of the way after 0.5 s at 30, 60 and 144 fps, the exp form 96% at all three)
 - files: references/principles.md (parameter table)

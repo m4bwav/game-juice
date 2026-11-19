@@ -76,7 +76,7 @@ These are starting values that published talks and the books converge on, not ru
 
 | Technique | Start | Notes |
 |---|---|---|
-| Hit-stop | 2-6 frames (33-100 ms) light; 8-15 frames heavy | buffer input during it; scale with damage (P-04); shorten or skip on fast repeated hits (light weapons, high fire rate), since stacked freezes read as stutter |
+| Hit-stop | 2-6 frames (33-100 ms) light; 8-15 frames heavy | buffer input during it; scale with damage (P-04); shorten or skip on fast repeated hits (light weapons, high fire rate), since stacked freezes read as stutter; keep screen shake running through the freeze (2-4 px) so it reads as impact, not a dropped frame; snap to the contact pose with no easing, keyed about 0.02 s before the hit (R-20261119-1) |
 | Screen shake (trauma model) | trauma += 0.2-0.5 per hit, decays 1.0-1.5 per s; offset = max × trauma² × noise | max offset 4-12 px (2D) or 0.1-0.3 units; rotation ≤ 3°; Perlin noise beats white noise (Eiserloh 2016) |
 | Smooth follow (camera, UI, value) | each frame move a fraction f = 1 - exp(-rate × dt) toward the target; rate 8-15 per s | a fixed fraction per frame (x += (target - x) × 0.1) only holds at one frame rate: after 0.5 s it reaches 79% at 30 fps and 100% at 144 fps against 96% at 60. Use the exp form or run it in the fixed update (fixed-loop engines in Sung and others, Build Your Own 2D Game Engine, 2nd ed., ch. 3 and 7) |
 | Camera kick | 2-6 px away from shot direction, recover over 80-150 ms | directional, unlike shake |
