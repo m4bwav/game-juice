@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261118-1 · 2026-11-18 · Web reference: occluder silhouette and off-screen pointers (1.3.8)
+- because: user request (technique-harvest posts robinduckett-3 and robinduckett-5; idea source robinduckett/boo-mas, which has no licence, so written in our own words with no code copied)
+- files: references/engines/web.md (Readability in 3D and wide worlds)
+- Adds the second-draw silhouette (GreaterDepth, depth write off; Unity and Godot equivalents) and edge pointers (clamp, behind-camera and horizon hiding, merge, per-kind cap). Triggers unchanged, so evals were not re-run.
+
 ### C-20261109-1 · 2026-11-09 · Step 2 checks foot sliding, stepped knockback and hit-stop on fast hits
 - because: user request (technique-harvest post 1xajfgh)
 - files: SKILL.md (Step 2)

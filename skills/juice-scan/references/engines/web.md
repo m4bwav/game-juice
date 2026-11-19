@@ -65,6 +65,19 @@ this.tweens.add({ targets: this.scoreText, scale: 1.3, duration: 70, yoyo: true,
 - Hit-stop: `gsap.globalTimeline.pause()` plus skipping the ticker's update for N ms (keep rendering).
 - Respect `gsap.matchMedia()` with `(prefers-reduced-motion: reduce)` to shorten or remove motion.
 
+## Readability in 3D and wide worlds
+
+**Occluder silhouette.** Flag it in a 3D third-person game where the player can walk behind trees, walls or hills and vanish. Fix: draw the player mesh a second time with a flat, dark, half-transparent material whose depth test passes only where something already sits in front (three.js `depthFunc = THREE.GreaterDepth`) and that writes no depth (`depthWrite = false`), so the shape shows through the occluder and nothing else changes.
+- Unity URP: a Render Objects renderer feature on the player's layer with an override material, depth test Greater, depth write off.
+- Godot 4: a next-pass material on the player's mesh, unshaded flat colour, depth test set to inverted (Greater), depth draw never.
+
+**Off-screen pointers.** Flag it when targets, allies or pickups can leave the view with nothing pointing at them.
+- Project each target to the screen; if it falls outside, clamp the marker to the screen edge (minus a margin) and rotate an arrow toward it.
+- Treat a target behind the camera (negative depth: flip the direction before clamping) or over the horizon of a curved world as hidden, not merely off-frame.
+- Merge targets of one kind that land close together on the edge into one marker with a count.
+- Cap how many markers each kind may show, nearest first, so the edge never fills up; let a map or list hold the full set.
+- Idea credit: robinduckett/boo-mas (described in our own words, no code copied).
+
 ## Haptics
 
 `navigator.vibrate?.(30)` on mobile, or a gamepad: `navigator.getGamepads()[0]?.vibrationActuator?.playEffect('dual-rumble', { duration: 80, strongMagnitude: 0.6, weakMagnitude: 0.3 })`. Feature-detect both.
