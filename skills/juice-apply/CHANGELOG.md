@@ -7,6 +7,11 @@ Entry shape: `### C-20261118-1 · 2026-11-18 · Damage-through-controls toggle (
 - files: references/accessibility.md (settings table)
 - Adds a default-on toggle for the low-health handling effect. Triggers unchanged, so evals were not re-run.
 
+### C-20261119-2 · 2026-11-19 · Frozen feel table and launch timer resets (1.3.11)
+- because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
+- files: SKILL.md (constants rule)
+- The constants rule now asks for one frozen feel table and timer resets on every new launch path. Triggers unchanged, so evals were not re-run.
+
 ### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
 ### C-20261106-1 · 2026-11-06 · Sfxwright, when installed
