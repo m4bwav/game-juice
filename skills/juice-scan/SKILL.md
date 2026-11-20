@@ -19,7 +19,7 @@ Run the scanner on the game root (the folder with `project.godot`, `ProjectSetti
 python "<this skill>/scripts/juice_scan.py" <game-root> --out <scratch>/juice-scan.json
 ```
 
-It prints one JSON object: `engine`, `libraries` (DOTween, Feel, Godot Tween, TweenService, GSAP...), `moments[]` (moment, file, function, line, existing `feedback` by channel, `gaps`, confidence), `findings` (no coyote time, no hit-stop, no shake toggle, no pitch variation...), and `risks` (shake every frame, spawning effects per frame, frozen timeScale, full-screen flash). Add `--md` for a readable table. It is read-only and fails soft: an `error` field means read the error, fix the path, and run it again. Never guess the map instead.
+It prints one JSON object: `engine`, `libraries` (DOTween, Feel, Godot Tween, TweenService, GSAP...), `moments[]` (moment, file, function, line, existing `feedback` by channel, `gaps`, confidence), `findings` (no coyote time, no hit-stop, no shake toggle, no pitch variation...), and `risks` (shake every frame, spawning effects per frame, frozen timeScale, full-screen flash). Add `--md` for a readable table. Single-file web games count: inline `<script>` blocks of `.html`/`.htm` files are read with their HTML line numbers. Add `--audio` when sound is in scope: it lists every play call with its literal volume and flags `audio_no_falloff`, `audio_loop_restart` and `audio_no_headroom`. It is read-only and fails soft: an `error` field means read the error, fix the path, and run it again. Never guess the map instead.
 
 The scanner matches names and calls, so treat its output as leads. If it finds no moments, say so and ask where the gameplay code lives. A scanner miss is a LEARNINGS entry, not a reason to stop.
 
@@ -32,6 +32,8 @@ Open every `high` and `medium` moment's function, plus any `low` one that is the
 - what feedback actually exists, including what is called indirectly (an `AudioManager.Play`, an animator event, a signal another script connects to; grep for the callee),
 - timing: input-to-response frames, lockouts, hit-stop, coyote and buffer windows.
 - movement and hits: animation rate tied to ground speed (no foot sliding), knockback that plays steps instead of sliding a pose, hit-stop shortened on fast repeated hits. The scanner findings `anim_speed_not_tied_to_move_speed` and `hit_stop_ignores_hit_rate` carry the numbers to confirm (freeze against the gap between hits, move speeds).
+- streaks, dodges and settings: `streak_without_pitch_ladder` (a combo whose cue never climbs), `no_near_miss` and `no_graze_margin` (dodge games with no reward for close passes and no forgiveness on a glancing hit), `reduce_motion_not_applied` (the setting exists but the shake code never reads it). Coyote and buffer findings only fire when a jump is bound to an input.
+- live timing (input-to-response ms, freeze frames, flash rate, a kill shot whose feedback never shows) cannot be read from code: measure the running page with threewright `tw feel` rather than guessing.
 
 Classify the feel before judging it (P-23): which of real-time control, simulated space and polish the game has. A game with polish only (cards, turns, menus) gets presentation goals: judge its UI, reveal and turn moments, not jump or aim timing. Then write down the properties the code implies (P-24, P-25): avatar speed, jump height, gravity, acceleration, lives or hit points, caps; give each with its file and line, or `not found`.
 

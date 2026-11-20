@@ -2,7 +2,14 @@
 
 Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with the reason. Reasons cite findings in [RESEARCH.md](RESEARCH.md) (`R-`), lessons in [LEARNINGS.md](LEARNINGS.md) (`L-`), and test runs in [TESTS.md](TESTS.md) (`T-`). State in `evergreen.json`. Protocol: MAINTENANCE.md.
 
-Entry shape: `### C-20261118-2 · 2026-11-18 · Damage through controls, shield ripples, bullet holes, audio param dedupe rows (1.3.9)
+Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
+
+### C-20261120-1 · 2026-11-20 · Web-game harvest rows: transitions, streaks, haptics, timing bands, crashes, audio, turn-based feedback (1.4.0)
+- because: user request (technique-harvest web-game harvest 2026-11, measured by play and written fresh, nothing copied: maumoya/boredom-blaster-play, sw897/one-tap-skyline, waleee7/peach-dash, dcjaychou/design-ridge-run, pkieltyka/zubspace, tianlinx/spire-echoes, luizbizzio/scandeck, larryzpl123/skybreak-protocol (MIT), vitaminclaude/voidstruck (PolyForm Strict, play and measure only))
+- files: references/principles.md (parameter table)
+- 23 parameter rows in our words with no game named: flash-cut transition, streak pitch ladder, haptics per outcome, timing bands with signed error, never-repeat-last shuffle, crash hit-stop with slowed particles, near miss and graze, stumble before death, charged action ring, plume easing, 10 Hz HUD numbers, refused actions with a reason, muzzle flash at rapid fire, invisible aim assist, chase and side-view camera numbers, additive shake with a cap and exponential decay, distance falloff and volume tiers, killing blow keeps its feedback, feedback lost to re-render, feedback keyed to damage applied, turn-based hit timing. Live timing is measured with threewright `tw feel`, not a second probe here. Triggers unchanged, so evals were not re-run.
+
+### C-20261118-2 · 2026-11-18 · Damage through controls, shield ripples, bullet holes, audio param dedupe rows (1.3.9)
 - because: user request (technique-harvest three-repos batch G: GPU-Bandits by sloppysteaks69, no licence, and voidstruck; ideas only, written fresh)
 - files: references/principles.md (parameter table)
 - Four parameter rows: low-health handling (steering slow-down, sine aim drift) as an alternative to shake, multi-hit shield ripples and persistent bullet holes pointing to threewright recipes, and the 1% change gate for per-frame audio params. Triggers unchanged, so evals were not re-run.
@@ -11,8 +18,6 @@ Entry shape: `### C-20261118-2 · 2026-11-18 · Damage through controls, shield 
 - because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
 - files: references/principles.md (P-29, parameter table)
 - P-29 teaches one frozen feel table and resetting forgiveness timers together on every launch; parameter rows for held-jump lift, launch squash and step up/down. Triggers unchanged, so evals were not re-run.
-
-### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
 ### C-20261119-1 · 2026-11-19 · Hit-stop: shake through the freeze, snap into contact (1.3.10)
 - because: R-20261119-1 (technique-harvest post pa20-p5-hit-timing, user request)

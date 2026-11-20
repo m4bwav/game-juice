@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Shake that reads the setting</title></head>
+<body>
+<canvas id="c"></canvas>
+<div id="menu"><label><input type="checkbox" id="calm"> Calm camera</label></div>
+<script>
+const settings = { reduceMotion: false };
+const cam = { x: 0, y: 0, trauma: 0 };
+
+function openMenu() {
+  settings.reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.getElementById('calm').checked = settings.reduceMotion;
+}
+
+function addTrauma(amount) {
+  cam.trauma = Math.min(1, cam.trauma + amount);
+}
+
+function updateCamera(dt) {
+  const scale = settings.reduceMotion ? 0 : 1;
+  const k = cam.trauma * cam.trauma * scale;
+  cam.x = 8 * k * (Math.random() * 2 - 1);
+  cam.y = 8 * k * (Math.random() * 2 - 1);
+  cam.trauma = Math.max(0, cam.trauma - 1.2 * dt);
+}
+
+function onCrash() {
+  addTrauma(0.5);
+}
+</script>
+</body>
+</html>

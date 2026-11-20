@@ -6,6 +6,14 @@ Write an entry the moment a real signal happens: a user correction, the same err
 
 ## Active
 
+### L-004 · 2026-11-20 · Single-file web games were invisible, and airtime 'jump' state tripped coyote findings
+- Trigger: technique-harvest web-game round. A canvas shooter whose whole game sat in one index.html gave 0 files scanned; a side-view vehicle game with a `jump` airtime state and no jump key got `no_coyote_time` and `no_jump_buffer`.
+- Hypothesis: the walker only knew script extensions, and the jump findings keyed on the word, not on an input.
+- Rule: read inline scripts of HTML pages with line numbers kept; report coyote and buffer only when a key, button or action press leads to a jump. Measure live timing with threewright `tw feel`; code reading cannot see it.
+- Evidence: tests/check_scan.py fixtures web-single-file, web-vehicle-airtime, web-platformer-space (1.4.0)
+- Scope: skill
+- Status: active · helpful 1 · harmful 0 · last_confirmed 2026-11-20
+
 ### L-002 · 2026-10-28 · A deckbuilder's core verbs were invisible to the scanner
 - Trigger: field test on a Unity colony deckbuilder. Of 168 moments, none was card play, draw or end turn, though `OnCardPlayed`, `OnCardDrawn` and `OnEndTurnClicked` all existed. The moment list only knew action-game verbs.
 - Hypothesis: the moment table came from platformer and brawler examples. Genres with other core verbs (cards, turns, placement) get audited on their side effects only.

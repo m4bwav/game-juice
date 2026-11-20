@@ -43,11 +43,48 @@ EXPECT = {
     "godot-wave-hero": ("godot", [("attack", "scripts/hero.gd", "attack")],
                         ["hit_stop_ignores_hit_rate", "anim_speed_not_tied_to_move_speed"]),
     "unity-wave-hero": ("unity", [("hit", "Assets/Scripts/Hero.cs", "OnSwordHit")], []),
+    # Single-file web games: inline <script> blocks, line numbers as in the HTML file.
+    "web-single-file": ("web", [("attack", "index.html", "shoot"), ("hit", "index.html", "hitPlayer"),
+                                ("score", "index.html", "addScore")], ["no_hit_stop"]),
+    "web-single-file-audio": ("web", [("hit", "index.html", "hitPlayer")], []),
+    "web-streak-flat": ("web", [], ["streak_without_pitch_ladder"]),
+    "web-streak-ladder": ("web", [], []),
+    "web-runner-plain": ("web", [("hit", "index.html", "checkCollisions")], ["no_near_miss", "no_graze_margin"]),
+    "web-runner-graze": ("web", [("hit", "index.html", "checkCollisions")], []),
+    "web-vehicle-airtime": ("web", [("jump", "index.html", "beginJump")], []),
+    "web-platformer-space": ("web", [("jump", "index.html", "jump")], ["no_coyote_time", "no_jump_buffer"]),
+    "web-reduce-menu-only": ("web", [], ["reduce_motion_not_applied"]),
+    "web-reduce-applied": ("web", [], []),
+    "web-audio-arena": ("web", [("attack", "index.html", "enemyShoot")], []),
+    "web-audio-tuned": ("web", [("attack", "index.html", "enemyShoot")], []),
+    "godot-thruster": ("godot", [], []),
 }
+# (fixture, function) -> the line it starts on in the file.
+EXPECT_LINES = {("web-single-file", "shoot"): 17, ("web-single-file", "hitPlayer"): 21,
+                ("web-single-file", "addScore"): 26, ("web-single-file-audio", "hitPlayer"): 16}
+# (fixture, function, channel, should the channel be a gap)
+EXPECT_GAPS = [("web-single-file", "hitPlayer", "audio", True), ("web-single-file", "hitPlayer", "visual", True),
+               ("web-single-file", "hitPlayer", "timing", True), ("web-single-file", "addScore", "audio", True),
+               ("web-single-file", "shoot", "audio", True), ("web-single-file-audio", "hitPlayer", "audio", False)]
+# --audio pass: the exact set of audio findings per fixture.
+EXPECT_AUDIO = {"web-audio-arena": {"audio_no_falloff", "audio_no_headroom"},
+                "godot-thruster": {"audio_loop_restart"},
+                "web-audio-tuned": set(), "web-single-file": set()}
 EXPECT_RISKS = {"unity-brawler": ["shake_per_frame"]}
 # Findings that must not fire: the tuned hero scales its freeze by time since the last hit and sets clip speed.
 EXPECT_FINDING_ABSENT = {"unity-wave-hero": ["hit_stop_ignores_hit_rate", "anim_speed_not_tied_to_move_speed"],
-                         "godot-platformer": ["anim_speed_not_tied_to_move_speed"]}
+                         "godot-platformer": ["anim_speed_not_tied_to_move_speed"],
+                         "web-streak-ladder": ["streak_without_pitch_ladder"],
+                         "web-runner-graze": ["no_near_miss", "no_graze_margin"],
+                         "web-vehicle-airtime": ["no_coyote_time", "no_jump_buffer"],
+                         "web-reduce-applied": ["reduce_motion_not_applied", "no_shake_toggle"],
+                         "web-reduce-menu-only": ["no_shake_toggle"]}
+# The fixtures from before 1.4.0 must not gain any of the newer findings.
+for _old in ("godot-platformer", "roblox-obby", "phaser-shooter", "pygame-dodge", "unity-brawler", "web-platformer",
+             "unity-deckbuilder", "godot-wave-hero", "unity-wave-hero"):
+    EXPECT_FINDING_ABSENT.setdefault(_old, [])
+    EXPECT_FINDING_ABSENT[_old] = EXPECT_FINDING_ABSENT[_old] + ["streak_without_pitch_ladder", "no_near_miss",
+                                                                 "no_graze_margin", "reduce_motion_not_applied"]
 # The numbers behind a finding: (fixture, finding id, key, expected value).
 EXPECT_NUMBERS = [("godot-wave-hero", "hit_stop_ignores_hit_rate", "freeze_s", 0.12),
                   ("godot-wave-hero", "hit_stop_ignores_hit_rate", "gap_s", 0.2),
@@ -121,6 +158,18 @@ def main() -> int:
                     problems.append(f"{fid}.{key} = {nums.get(key)}, expected {val}")
         got_r = {x["id"] for x in r.get("risks", [])}
         problems += [f"missing risk {x}" for x in EXPECT_RISKS.get(name, []) if x not in got_r]
+        by_fn = {m["function"]: m for m in r.get("moments", [])}
+        for (fx, fn), line in EXPECT_LINES.items():
+            if fx == name and by_fn.get(fn, {}).get("line") != line:
+                problems.append(f"{fn} line {by_fn.get(fn, {}).get('line')}, expected {line}")
+        for fx, fn, ch, gap in EXPECT_GAPS:
+            if fx == name and (ch in by_fn.get(fn, {}).get("gaps", [])) != gap:
+                problems.append(f"{fn} gap {ch} should be {'present' if gap else 'absent'}")
+        if name in EXPECT_AUDIO:
+            out_a = subprocess.run([sys.executable, SCAN, os.path.join(FIX, name), "--audio"], capture_output=True, text=True)
+            got_a = {f["id"] for f in json.loads(out_a.stdout).get("audio", {}).get("findings", [])}
+            if got_a != EXPECT_AUDIO[name]:
+                problems.append(f"audio findings {sorted(got_a)}, expected {sorted(EXPECT_AUDIO[name])}")
         got_fn = {m["function"] for m in r.get("moments", [])}
         problems += [f"reported excluded function {fn}" for fn in EXPECT_ABSENT.get(name, []) if fn in got_fn]
         for m in r.get("moments", []):

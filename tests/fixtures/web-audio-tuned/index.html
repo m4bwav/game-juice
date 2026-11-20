@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Arena shooter, tuned audio</title></head>
+<body>
+<canvas id="c" width="960" height="540"></canvas>
+<script>
+const HEAR_RADIUS = Math.max(960, 540) / 2;
+const sounds = {
+  shot: new Audio('shot.ogg'),
+  hum: new Audio('hum.ogg'),
+};
+sounds.hum.loop = true;
+const player = { x: 480, y: 270, thrusting: false };
+
+function playSound(name, volume) {
+  const s = sounds[name].cloneNode();
+  s.volume = volume;
+  s.play();
+}
+
+function falloff(x, y) {
+  const d = Math.hypot(x - player.x, y - player.y);
+  return Math.max(0, 1 - d / HEAR_RADIUS);
+}
+
+function playerShoot() {
+  playSound('shot', 0.3);
+}
+
+function enemyShoot(enemy) {
+  playSound('shot', 0.25 * falloff(enemy.x, enemy.y));
+}
+
+function update(dt) {
+  if (player.thrusting && sounds.hum.paused) sounds.hum.play();
+  if (!player.thrusting && !sounds.hum.paused) sounds.hum.pause();
+}
+</script>
+</body>
+</html>

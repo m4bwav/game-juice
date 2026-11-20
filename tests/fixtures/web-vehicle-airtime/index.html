@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Side-view hill car</title></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const keys = {};
+const car = { x: 0, y: 0, vx: 0, vy: 0, grounded: true, airtime: 0 };
+
+addEventListener('keydown', e => { keys[e.code] = true; });
+addEventListener('keyup', e => { keys[e.code] = false; });
+
+function beginJump() {
+  car.airtime = 0;
+  car.inAir = true;
+}
+
+function land() {
+  car.inAir = false;
+  car.airtime = 0;
+}
+
+function physics(dt, groundY) {
+  const wasGrounded = car.grounded;
+  if (keys.ArrowRight) car.vx += 12 * dt;
+  car.vy += 30 * dt;
+  car.y += car.vy * dt;
+  car.grounded = car.y >= groundY;
+  if (wasGrounded && !car.grounded) beginJump();
+  if (!wasGrounded && car.grounded) land();
+  if (!car.grounded) car.airtime += dt;
+}
+</script>
+</body>
+</html>

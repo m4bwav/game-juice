@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261120-2 · 2026-11-20 · Single-file HTML games, streak, dodge, reduce-motion and audio findings (1.4.0)
+- because: user request (technique-harvest web-game harvest 2026-11, measured by play and written fresh, nothing copied: maumoya/boredom-blaster-play, sw897/one-tap-skyline, waleee7/peach-dash, dcjaychou/design-ridge-run, pkieltyka/zubspace, tianlinx/spire-echoes, luizbizzio/scandeck, larryzpl123/skybreak-protocol (MIT), vitaminclaude/voidstruck (PolyForm Strict, play and measure only)); L-004
+- files: scripts/juice_scan.py (1.4.0), tests/check_scan.py, 13 new fixtures under tests/fixtures (web-single-file*, web-streak-*, web-runner-*, web-vehicle-airtime, web-platformer-space, web-reduce-*, web-audio-*, godot-thruster), SKILL.md (Step 1 output paragraph, Step 2 bullets)
+- Inline `<script>` blocks of .html/.htm files are scanned as JavaScript with HTML line numbers (src= and non-JS types skipped; an HTML-only folder is detected as engine `web`). New findings: `streak_without_pitch_ladder` (low), `no_near_miss` (medium), `no_graze_margin` (low), `reduce_motion_not_applied` (medium). `--audio` adds an audio section: play calls, literal volumes, `audio_no_falloff`, `audio_loop_restart`, `audio_no_headroom`. Fix: `no_coyote_time` and `no_jump_buffer` fire only when a jump is bound to an input (a vehicle whose jump is airtime state no longer trips them). The nine older fixtures report the same findings, moments and risks as 1.3.0. Thresholds are our start values. Triggers unchanged, so evals were not re-run.
+
 ### C-20261120-1 · 2026-11-20 · Hit-stop against hit rate, clip speed against move speed (1.3.12)
 - because: user request (technique-harvest verdict #33, post 1xajfgh: fixed hit-stop read as glitchy on fast weapons, feet slid when clip rate ignored ground speed; ideas only, no code in the source)
 - files: scripts/juice_scan.py (1.3.0), tests/check_scan.py, tests/fixtures/godot-wave-hero, tests/fixtures/unity-wave-hero, SKILL.md (Step 2 movement and hits bullet)

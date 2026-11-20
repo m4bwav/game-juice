@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Timing tap, flat cue</title></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const ac = new AudioContext();
+let combo = 0, score = 0;
+
+function beep(freq) {
+  const o = ac.createOscillator();
+  o.frequency.value = freq;
+  o.connect(ac.destination);
+  o.start();
+  o.stop(ac.currentTime + 0.08);
+}
+
+function onTap(errorMs) {
+  if (Math.abs(errorMs) < 30) {
+    combo++;
+    score += 10 * combo;
+    beep(660);
+  } else {
+    combo = 0;
+    beep(220);
+  }
+}
+
+addEventListener('pointerdown', () => onTap(performance.now() % 500 - 250));
+</script>
+</body>
+</html>
