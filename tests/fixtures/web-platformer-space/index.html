@@ -1,0 +1,21 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Space-bound jump</title></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const hero = { x: 40, y: 0, vy: 0, onGround: true };
+
+function jump() {
+  if (hero.onGround) {
+    hero.vy = -11;
+    hero.onGround = false;
+  }
+}
+
+addEventListener('keydown', e => {
+  if (e.code === 'Space') jump();
+});
+</script>
+</body>
+</html>

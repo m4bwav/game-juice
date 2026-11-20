@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><title>Arena shooter, flat audio</title></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const sounds = {
+  shot: new Audio('shot.ogg'),
+  boom: new Audio('boom.ogg'),
+  pickup: new Audio('pickup.ogg'),
+};
+
+function playSound(name, volume) {
+  const s = sounds[name].cloneNode();
+  s.volume = volume;
+  s.play();
+}
+
+function playerShoot() {
+  playSound('shot', 1.0);
+}
+
+function enemyShoot(enemy) {
+  enemy.cooldown = 0.8;
+  playSound('shot', 1.0);
+}
+
+function onPickup() {
+  playSound('pickup', 1.0);
+}
+</script>
+</body>
+</html>

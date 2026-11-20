@@ -17,3 +17,5 @@ Append-only. One line per operation: `## [YYYY-MM-DD] op | title` where op is on
 ## [2026-11-19] update | 1.3.11: P-29 frozen feel table and launch timer resets; juice_scan 1.2.0 findings scattered_feel_constants and launch_without_timer_reset; fixture web-platformer
 
 ## [2026-11-20] update | 1.3.12: juice_scan 1.3.0 findings hit_stop_ignores_hit_rate (freeze vs gap between hits) and anim_speed_not_tied_to_move_speed (foot sliding); fixtures godot-wave-hero (trips both) and unity-wave-hero (tuned, trips neither) (technique-harvest #33, post 1xajfgh)
+
+## [2026-11-20] update | 1.4.0: juice_scan 1.4.0 reads inline <script> of .html/.htm; findings streak_without_pitch_ladder, no_near_miss, no_graze_margin, reduce_motion_not_applied; --audio pass (audio_no_falloff, audio_loop_restart, audio_no_headroom); coyote/buffer only when jump is bound to an input; 13 fixtures; 23 principles rows (technique-harvest web-game round, written fresh)

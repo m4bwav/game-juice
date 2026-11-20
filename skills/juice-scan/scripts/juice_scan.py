@@ -2,7 +2,12 @@
 """juice_scan.py - map a game's feel moments and the feedback each one already has.
 
 Usage:
-  python juice_scan.py <project-root> [--md] [--out FILE] [--max-files N] [--include-vendor]
+  python juice_scan.py <project-root> [--md] [--out FILE] [--max-files N] [--include-vendor] [--audio]
+
+Inline <script> blocks of .html/.htm files are scanned as JavaScript with line
+numbers kept as in the HTML file. --audio adds an "audio" section: every sound
+play call with its literal volume, and findings for world sounds without
+distance falloff, looped sounds restarted every frame, and flat effect volumes.
 
 Prints one JSON object (or a Markdown moment map with --md). Pure standard
 library, read-only, fails soft: on any error it still prints a JSON object
@@ -19,7 +24,7 @@ import re
 import sys
 from datetime import datetime
 
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "Library", "Temp", "Logs", "obj", "bin",
@@ -39,7 +44,12 @@ LANG_BY_EXT = {
     ".cs": "csharp", ".gd": "gdscript", ".lua": "lua", ".luau": "lua",
     ".js": "js", ".mjs": "js", ".ts": "js", ".jsx": "js", ".tsx": "js",
     ".py": "python", ".cpp": "cpp", ".h": "cpp", ".hpp": "cpp",
+    ".html": "js", ".htm": "js",
 }
+HTML_EXT = (".html", ".htm")
+SCRIPT_TAG_RX = re.compile(r"<script\b([^>]*)>(.*?)</script\s*>", re.I | re.S)
+# A type= attribute that is not JavaScript (JSON, ld+json, importmap, shader source, templates).
+JS_SCRIPT_TYPE = re.compile(r"""(?i)\btype\s*=\s*["']?\s*(?!(?:text/javascript|application/javascript|module|text/babel)\b)""")
 
 # --- engine detection ------------------------------------------------------
 
@@ -84,6 +94,15 @@ def detect_engine(root: str, files: list[str]) -> dict:
             if f.endswith(".py") and _contains(f, r"^\s*import pygame|^\s*from pygame"):
                 engine, lang = "pygame", "python"
                 evidence.append(os.path.relpath(f, root) + " imports pygame")
+                break
+    if engine == "unknown":
+        for f in files:
+            if f.lower().endswith(HTML_EXT) and _source(f).strip():
+                src = _source(f)
+                engine = next((e for rx, e in ((r"new Phaser\.Game", "phaser"), (r"\bPIXI\.", "pixijs"),
+                                                (r"\bTHREE\.", "threejs")) if re.search(rx, src)), "web")
+                lang = "js"
+                evidence.append(os.path.relpath(f, root).replace("\\", "/") + " inline <script>")
                 break
     if engine == "unknown":
         for f in files:
@@ -203,7 +222,7 @@ FEEDBACK = {
     "visual": r"Particle|particle|emitter|Emitter|\bflash|Flash|tint|modulate\b|\.color\s*=|Color\s*=|vfx|VFX|\bfx\b|explosion|Explosion|spawn_?effect|trail|Trail|dust|sparks?",
     "motion": r"DOTween|\.DO[A-Z]\w*\(|\btween|Tween|[Ll]erp\(|ease|Ease|SmoothDamp|AnimationCurve|squash|stretch|PunchScale|DOPunch|scale\s*=|localScale\s*=",
     "camera": r"[Ss]hake|Impulse|trauma|cameras\.main\.(shake|flash|zoom)|FieldOfView|\bfov\b|zoom|camera.*offset|Camera.*Offset",
-    "audio": r"AudioSource|PlayOneShot|AudioStreamPlayer|\bSound\b|:Play\(\)|sound|Sound|sfx|SFX|audio|Audio|mixer\.|love\.audio|playSound|\.play\(\s*['\"]",
+    "audio": r"AudioSource|PlayOneShot|AudioStreamPlayer|\bSound\b|:Play\(\)|sound|Sound|sfx|SFX|audio|Audio|mixer\.|love\.audio|playSound|createOscillator|createBufferSource|\.play\(\s*['\"]",
     "ui": r"setText\(|popup|Popup|DamageNumber|damage_number|floating_?text|FloatingText|\bText\b|\.text\s*=|Label|label\.|HUD|hud|TextLabel",
     "haptic": r"SetMotorSpeeds|[Vv]ibrat|Haptic|rumble|Rumble|start_joy_vibration|navigator\.vibrate|SetMotor",
     "timing": r"hit_?stop|HitStop|hitStop|freeze_?frame|\.freeze\(|[Ff]reeze[A-Z_]\w*\(|timeScale|time_scale|Engine\.time_scale|coyote|Coyote|jump_?buffer|JumpBuffer|inputBuffer|input_buffer|grace|slow_?mo|SlowMo",
@@ -336,6 +355,26 @@ def _read(path: str) -> str:
         return ""
 
 
+def _html_scripts(html: str) -> str:
+    """Inline JavaScript of an HTML page, everything else blanked to newlines so line numbers match the file.
+    Scripts with src= and non-JS types (JSON, ld+json, importmap, shaders, templates) are skipped."""
+    parts, pos = [], 0
+    for m in SCRIPT_TAG_RX.finditer(html):
+        attrs, body = m.group(1), m.group(2)
+        parts.append("\n" * html.count("\n", pos, m.start(2)))
+        is_js = not re.search(r"(?i)\bsrc\s*=", attrs) and not JS_SCRIPT_TYPE.search(attrs)
+        parts.append(body if is_js else "\n" * body.count("\n"))
+        pos = m.end(2)
+    parts.append("\n" * html.count("\n", pos))
+    return "".join(parts)
+
+
+def _source(path: str) -> str:
+    """The scannable code of a file: the file itself, or the inline scripts of an HTML page."""
+    text = _read(path)
+    return _html_scripts(text) if path.lower().endswith(HTML_EXT) else text
+
+
 def _contains(path: str, rx: str) -> bool:
     return re.search(rx, _read(path), re.M) is not None
 
@@ -387,7 +426,7 @@ def classify(name: str, body: str, rel: str = "", nlines: int = 0) -> list[tuple
     return scores
 
 
-def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict:
+def scan(root: str, include_vendor: bool = False, max_files: int = 4000, audio: bool = False) -> dict:
     root = os.path.abspath(root)
     files, vendor = walk(root, include_vendor, max_files)
     eng = detect_engine(root, files)
@@ -404,13 +443,16 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
     walk_anims: list[str] = []
     anim_synced: list[str] = []
     move_speeds: list[tuple[float, str]] = []
+    texts: list[tuple[str, str]] = []
+    funcs: list[tuple[str, str, int, str]] = []  # (file, name, line, body)
 
     for path in files:
         rel = os.path.relpath(path, root).replace("\\", "/")
         lang = LANG_BY_EXT[os.path.splitext(path)[1].lower()]
-        text = _read(path)
-        if not text:
+        text = _source(path)
+        if not text.strip():
             continue
+        texts.append((rel, text))
         for lib, rx in LIBRARY_PATTERNS:
             if re.search(rx, text):
                 libs.add(lib)
@@ -426,6 +468,7 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
         for name, start, end in split_functions(lines, lang):
             func_count += 1
             body = "\n".join(lines[start - 1:end - 1])
+            funcs.append((rel, name, start, body))
             short = name.split(".")[-1].split(":")[-1]
             # risks
             for rid, rx, why in RISKS:
@@ -475,7 +518,9 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
     if has_audio and not project_flags["pitch_variation"]:
         findings.append({"id": "no_pitch_variation", "severity": "medium",
                          "why": "Sounds play but no pitch randomization was found; repeated identical samples fatigue the ear (machine-gun effect)."})
-    if any(m["moment"] == "jump" for m in moments):
+    # Coyote time and a jump buffer only matter when the player presses jump (not when "jump" is airtime state).
+    jump_inputs = find_jump_inputs(texts)
+    if any(m["moment"] == "jump" for m in moments) and jump_inputs:
         if not project_flags["coyote_time"]:
             findings.append({"id": "no_coyote_time", "severity": "medium", "why": "Jumping exists but no coyote-time grace window was found."})
         if not project_flags["jump_buffer"]:
@@ -496,6 +541,9 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
 
     findings += rate_and_locomotion_findings(project_flags["hit_stop"], hitstop_durations, hit_intervals,
                                              hitstop_scaled, walk_anims, anim_synced, move_speeds)
+    findings += streak_findings(texts, has_audio or bool(project_audio(texts)))
+    findings += dodge_findings(texts, funcs)
+    findings += reduce_motion_findings(texts, funcs, project_flags["reduce_motion_toggle"])
 
     by_moment: dict[str, int] = {}
     for m in moments:
@@ -503,7 +551,7 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
     order = {"high": 0, "medium": 1, "low": 2}
     moments.sort(key=lambda m: (order[m["confidence"]], -len(m["gaps"]), m["file"], m["line"]))
 
-    return {
+    result = {
         "tool": "juice_scan.py", "version": VERSION,
         "scanned_at": datetime.now().isoformat(timespec="seconds"),
         "root": root,
@@ -517,8 +565,12 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
         "project_flags": project_flags,
         "findings": findings,
         "risks": risks,
+        "jump_inputs": jump_inputs[:5],
         "note": "Heuristic map from names and calls. Read each function before suggesting; confidence=low entries are often false positives.",
     }
+    if audio:
+        result["audio"] = audio_scan(texts, funcs)
+    return result
 
 
 def collect_rate_and_locomotion(text, rel, durations, intervals, walk_anims, synced, speeds) -> None:
@@ -595,6 +647,216 @@ def rate_and_locomotion_findings(hit_stop_flags, durations, intervals, scaled, w
     return out
 
 
+# --- jump bound to an input ---------------------------------------------------
+# A line that reads a key, button or action, and a jump call or action name on it or within two lines after.
+INPUT_LINE_RX = re.compile(
+    r"(?i)keydown|keyup|keypress|\bK_(SPACE|UP|w)\b|\bkey\s*===?|\.key\b|\.code\b|keyCode|is_action_(just_)?pressed|"
+    r"GetButton|GetKey|Input\.Get|InputAction|UserInputService|ContextActionService|JustDown|\.isDown|"
+    r"pointerdown|touchstart|mousedown|_unhandled_input|func _input|love\.keypressed|wasPressedThisFrame|\bbtnp?\(")
+JUMP_PRESS_RX = re.compile(
+    r"""(?i)\bjump\w*\s*\(|["']jump["']|\bjump\w*\s*=\s*true\b|\.Jump\s*=\s*true|JumpRequest|\bjump_?(pressed|queued|requested)\b""")
+
+
+def find_jump_inputs(texts) -> list:
+    """file:line of each place a jump is bound to an input (a key, button or action)."""
+    out = []
+    for rel, text in texts:
+        lines = text.splitlines()
+        for i, line in enumerate(lines):
+            if INPUT_LINE_RX.search(line):
+                for j in range(i, min(i + 3, len(lines))):
+                    if JUMP_PRESS_RX.search(lines[j]):
+                        out.append(f"{rel}:{j + 1}")
+                        break
+    return sorted(set(out), key=out.index)
+
+
+# --- streak pitch ladder (idea: a one-tap stacking game, technique-harvest 2026-11) ----------------
+STREAK_INC_RX = re.compile(r"(?i)\b(\w*(?:combo|streak|chain|perfects?|in_?a_?row)\w*)\s*(?:\+\+|\+=\s*1\b|=\s*\1\s*\+\s*1\b)")
+PROJECT_AUDIO_RX = re.compile(
+    r"AudioContext|createOscillator|new Audio\(|playSound|play_sound|PlayOneShot|AudioSource|AudioStreamPlayer|"
+    r"pygame\.mixer|love\.audio|SoundService|\bHowl\b|\bsfx\w*\s*\(")
+PITCH_WORD_RX = re.compile(r"(?i)pitch|playback_?rate|\brate\b|frequency|freq\b|detune|semitone")
+SEMITONE_RX = re.compile(r"2\s*\*\*\s*\(|Math\.pow\(\s*2\s*,|\bpow\(\s*2(\.0)?\s*,|1\.059|semitone")
+# Start values: warm-up of 2 steps, +1 semitone a step, cap at +4.
+LADDER = {"warmup_steps": 2, "semitones_per_step": 1, "cap_semitones": 4}
+
+
+def project_audio(texts) -> list:
+    return [rel for rel, text in texts if PROJECT_AUDIO_RX.search(text)]
+
+
+def streak_findings(texts, has_audio: bool) -> list:
+    """streak_without_pitch_ladder: a combo or streak counter climbs, sounds play, and no pitch follows the counter."""
+    counters, where = set(), []
+    for rel, text in texts:
+        for m in STREAK_INC_RX.finditer(text):
+            counters.add(m.group(1))
+            where.append(f"{rel}:{text.count(chr(10), 0, m.start()) + 1}")
+    if not counters or not has_audio:
+        return []
+    names = re.compile(r"\b(" + "|".join(re.escape(c) for c in counters) + r")\b|combo|streak|chain", re.I)
+    for _, text in texts:
+        for line in text.splitlines():
+            if SEMITONE_RX.search(line) or (PITCH_WORD_RX.search(line) and names.search(line)):
+                return []
+    return [{
+        "id": "streak_without_pitch_ladder", "severity": "low",
+        "why": ("A streak or combo counter climbs and sounds play, but no pitch, rate or frequency follows the counter, so "
+                "the run sounds the same at step 2 and step 20. Raise the cue 1 semitone a step (factor 2 ** (n / 12)) "
+                "from the 3rd step, cap at +4, shift both notes of a two-note cue, and reset with the streak (P-11)."),
+        "numbers": dict(LADDER, counters=sorted(counters)),
+        "where": where[:8],
+    }]
+
+
+# --- near miss and graze margin (idea: a lane runner, technique-harvest 2026-11) ------------------------
+OBSTACLE_RX = re.compile(r"(?<![a-z])(obstacle|hazard|barrier|spike|asteroid|lane|enemy_?bullet|incoming)")
+COLLIDE_RX = re.compile(r"(?i)collid|collision|overlap|intersect|colliderect|hit_?test|\baabb\b|OnTriggerEnter|"
+                        r"OnCollisionEnter|body_entered|Touched|Math\.hypot\([^)]*\)\s*<|\bdist\w*\s*<")
+NEAR_MISS_RX = re.compile(r"near_?miss|near_?pass|graze|close_?call|clearance|min_?gap|closest_?pass")
+MARGIN_RX = re.compile(r"graze|margin|forgiv|stumble|tolerance|epsilon|lenien|hitbox_?(scale|shrink|inset)")
+RUN_END_RX = re.compile(r"(?i)game_?over|\bdie\s*\(|\bdead\s*=\s*true|\blives\s*(-=|--)|\bhp\s*=\s*0\b|\bhealth\s*=\s*0\b|"
+                        r"restart\s*\(|end_?run|\bcrash\s*\(|running\s*=\s*false|alive\s*=\s*false")
+
+
+def dodge_findings(texts, funcs) -> list:
+    """no_near_miss and no_graze_margin for games where the player dodges obstacles."""
+    obstacles = [f"{rel}:{_snake(t).count(chr(10), 0, m.start()) + 1}" for rel, t in texts
+                 for m in [OBSTACLE_RX.search(_snake(t))] if m]
+    hits = [(rel, name, line, body) for rel, name, line, body in funcs if COLLIDE_RX.search(body)]
+    if not obstacles or not hits:
+        return []
+    snaked = "\n".join(_snake(t) for _, t in texts)
+    out = []
+    if not NEAR_MISS_RX.search(snaked):
+        out.append({
+            "id": "no_near_miss", "severity": "medium",
+            "why": ("Obstacles are dodged but close passes earn nothing. Track the smallest clearance per obstacle while "
+                    "it passes and reward passes under about a quarter of a lane (a whoosh, a short slow-down, points)."),
+            "numbers": {"reward_clearance_lanes": 0.25},
+            "where": (obstacles + [f"{r}:{ln} {n}" for r, n, ln, _ in hits])[:8],
+        })
+    enders = [f"{r}:{ln} {n}" for r, n, ln, b in hits if RUN_END_RX.search(b)]
+    if enders and not MARGIN_RX.search(snaked):
+        out.append({
+            "id": "no_graze_margin", "severity": "low",
+            "why": ("A collision ends the run or kills at once with no graze margin or stumble tier. Shrink the hurt box "
+                    "a little below the art, and let a glancing hit cost speed (a stumble) the first time, so only a "
+                    "second hit inside about 5 s ends the run."),
+            "numbers": {"stumble_window_s": 5.5},
+            "where": enders[:8],
+        })
+    return out
+
+
+# --- reduce motion read where shake is applied (idea: a side-view vehicle game, technique-harvest 2026-11) ----
+SHAKE_FUNC_NAME = re.compile(r"(?i)shake|trauma|camera|cam\b")
+REDUCE_READ_RX = re.compile(PROJECT_CHECKS["reduce_motion_toggle"] + r"|reduced_?motion|motion_?scale|motionScale")
+REDUCE_ASSIGN_RX = re.compile(r"\b(\w+)\s*(?:=|:)\s*[^;\n]*(?:" + PROJECT_CHECKS["reduce_motion_toggle"] + r")")
+
+
+def reduce_motion_findings(texts, funcs, toggle_flags) -> list:
+    """reduce_motion_not_applied: a reduce-motion setting exists, but no function that writes shake reads it."""
+    if not toggle_flags:
+        return []
+    shakers = [(rel, name, line, body) for rel, name, line, body in funcs
+               if SHAKE_CALL.search(body) or (SHAKE_FUNC_NAME.search(name) and re.search(r"[Ss]hake|trauma", body))]
+    if not shakers:
+        return []
+    names = {m.group(1) for _, t in texts for m in REDUCE_ASSIGN_RX.finditer(t)} - {"var", "let", "const", "if"}
+    alias = re.compile(r"\b(" + "|".join(re.escape(n) for n in names) + r")\b") if names else None
+    for _, _, _, body in shakers:
+        if REDUCE_READ_RX.search(body) or (alias and alias.search(body)):
+            return []
+    return [{
+        "id": "reduce_motion_not_applied", "severity": "medium",
+        "why": ("A reduce-motion or shake setting exists, but none of the functions that add or apply shake read it, so "
+                "the setting does nothing in play. Read it where the shake offset is written: scale the amplitude by "
+                "the setting (0 when reduce motion is on) (P-18, J12)."),
+        "where": toggle_flags[:3] + [f"{r}:{ln} {n}" for r, n, ln, _ in shakers[:5]],
+    }]
+
+
+# --- audio pass (--audio; idea: a networked arena shooter, technique-harvest 2026-11) -------------------
+PLAY_CALL_RX = re.compile(
+    r"(?i)\b(?:play_?one_?shot|play_?clip_?at_?point|play_?sound|play_?sfx|sfx)\s*\(|(?<!anims)\.play\s*\(|"
+    r"\b(?:src|source|osc\w*|node|voice)\.start\s*\(|:Play\(\)")
+VOLUME_LIT_RX = re.compile(r"(?i)\b(?:volume|vol|gain(?:\.value)?)\s*(?:[:=]|\.setValueAtTime\(|\()\s*(\d*\.?\d+)\b"
+                           r"|\bplay_?(?:sound|sfx)\s*\(\s*[\"'][^\"']*[\"']\s*,\s*(\d*\.?\d+)\b")
+WORLD_HANDLER_RX = re.compile(r"(?i)enemy|remote|other|opponent|explo|world|spawn|impact|monster|npc|bot\b")
+WORLD_ARGS_RX = re.compile(r"(?i)\b(?:play\w*|sfx)\s*\([^)]*\b(?:x|pos|position|global_position|transform\.position)\b")
+DISTANCE_RX = re.compile(r"(?i)\bdist\w*|hypot|falloff|attenuat|rolloff|spatial|panner|AudioStreamPlayer[23]D|"
+                         r"refDistance|maxDistance|max_distance|unit_size|\b1\s*-\s*d\s*/")
+SPATIAL_PLAYER_RX = re.compile(r"createPanner|new PannerNode|AudioStreamPlayer[23]D|spatialBlend\s*=\s*1|\.pos\(|RollOffMode")
+LOOPED_SET_RX = re.compile(r"\b([\w.$]+?)\.loop\s*=\s*(?:true|True)\b")
+LOOPED_NAME_RX = re.compile(r"(?i)loop|engine|thrust|motor|hum\b|ambien|drone|wind\b|music|siren|alarm")
+PLAYING_GUARD_RX = re.compile(r"(?i)is_?playing|\.playing\b|\.paused\b|playing\s*[!=]=|started\b|is_on\b|already|_active\b")
+HANDLER_RX = re.compile(r"(?i)^(on_?message|onmessage|handle\w*message|on_?packet|on_?data|on_?state|on_?snapshot)$")
+LOOP_PLAY_RX = re.compile(r"""([\w.$]+?)\s*\.\s*(?:play|Play|start)\s*\(|\$([\w/]+)\.play\(""")
+TIERS = {"tiers": [0.18, 0.38], "falloff": "1 - d / r, r = half the larger screen side"}
+
+
+def audio_scan(texts, funcs) -> dict:
+    """List every play call with its literal volume and flag falloff, loop restarts and flat volumes."""
+    plays, volumes = [], []
+    for rel, text in texts:
+        for i, line in enumerate(text.splitlines(), 1):
+            if PLAY_CALL_RX.search(line):
+                plays.append(f"{rel}:{i}")
+            for m in VOLUME_LIT_RX.finditer(line):
+                v = float(m.group(1) or m.group(2))
+                if 0 <= v <= 4:
+                    volumes.append((v, f"{rel}:{i}"))
+    findings = []
+    spatial = any(SPATIAL_PLAYER_RX.search(t) for _, t in texts)
+    flat_world = []
+    for rel, name, line, body in funcs:
+        if not PLAY_CALL_RX.search(body):
+            continue
+        world = WORLD_HANDLER_RX.search(name) or WORLD_ARGS_RX.search(body)
+        if world and not spatial and not DISTANCE_RX.search(body):
+            flat_world.append(f"{rel}:{line} {name}")
+    if flat_world:
+        findings.append({
+            "id": "audio_no_falloff", "severity": "medium",
+            "why": ("Sounds from enemies, other players or world positions play at one volume however far away they are, "
+                    "so a far shot is as loud as your own. Scale by distance: gain = base x max(0, 1 - d / r), r about "
+                    "half the larger screen side, or use a 2D/3D spatial player."),
+            "numbers": TIERS, "where": flat_world[:8],
+        })
+    looped = {m.group(1).split(".")[-1] for _, t in texts for m in LOOPED_SET_RX.finditer(t)}
+    restarts = []
+    for rel, name, line, body in funcs:
+        short = name.split(".")[-1].split(":")[-1]
+        if not (PER_FRAME.match(short) or HANDLER_RX.match(short)):
+            continue
+        for m in LOOP_PLAY_RX.finditer(body):
+            target = (m.group(1) or m.group(2) or "").split(".")[-1].split("/")[-1]
+            if (target in looped or LOOPED_NAME_RX.search(target)) and not PLAYING_GUARD_RX.search(body):
+                restarts.append(f"{rel}:{line + body.count(chr(10), 0, m.start())} {name}")
+                break
+    if restarts:
+        findings.append({
+            "id": "audio_loop_restart", "severity": "medium",
+            "why": ("A looped sound is started inside a per-frame or per-message function with no is-playing check, so it "
+                    "restarts every frame and stutters. Keep a small state machine: start the ignition once on the edge, "
+                    "then a sustain loop that keeps playing until the input ends."),
+            "where": restarts[:8],
+        })
+    vals = [v for v, _ in volumes]
+    if vals and (min(vals) >= 1.0 or (len(vals) >= 3 and max(vals) == min(vals))):
+        findings.append({
+            "id": "audio_no_headroom", "severity": "low",
+            "why": ("Every literal effect volume is the same (or full scale), so nothing sits above anything else and "
+                    "stacked effects clip. Tier them: frequent and remote effects about 0.18, your own weapon 0.24-0.28, "
+                    "rare big moments 0.32-0.38, times a user slider per bus, leaving headroom for many at once."),
+            "numbers": dict(TIERS, volumes=sorted(set(vals))),
+            "where": [w for _, w in volumes[:8]],
+        })
+    return {"plays": plays[:60], "volumes": sorted(set(vals)), "findings": findings}
+
+
 def to_markdown(r: dict) -> str:
     out = [f"# Juice scan: {os.path.basename(r['root'])}", "",
            f"Engine: **{r['engine']['engine']}** ({', '.join(r['engine']['evidence']) or 'no marker'}). "
@@ -606,6 +868,11 @@ def to_markdown(r: dict) -> str:
                    f"{', '.join(m['feedback']) or '-'} | {', '.join(m['gaps']) or '-'} | {m['confidence']} |")
     if r["findings"]:
         out += ["", "## Project findings", ""] + [f"- **{f['id']}** ({f['severity']}): {f['why']}" for f in r["findings"]]
+    au = r.get("audio")
+    if au:
+        out += ["", "## Audio", "", f"{len(au['plays'])} play calls; literal volumes: "
+                f"{', '.join(str(v) for v in au['volumes']) or 'none'}."]
+        out += [f"- **{f['id']}** ({f['severity']}): {f['why']} ({', '.join(f['where'][:4])})" for f in au["findings"]]
     if r["risks"]:
         out += ["", "## Risks (possible over-juicing or bugs)", ""] + [
             f"- **{x['id']}** `{x['function']}` in {x['file']}:{x['line']}: {x['why']}" for x in r["risks"]]
@@ -619,11 +886,12 @@ def main(argv=None) -> int:
     ap.add_argument("--out", help="also write the output to this file")
     ap.add_argument("--max-files", type=int, default=4000)
     ap.add_argument("--include-vendor", action="store_true", help="scan Plugins/, addons/, vendor/ too")
+    ap.add_argument("--audio", action="store_true", help="add the audio pass: play calls, volumes, falloff, loop restarts, headroom")
     a = ap.parse_args(argv)
     try:
         if not os.path.isdir(a.root):
             raise FileNotFoundError(f"not a directory: {a.root}")
-        result = scan(a.root, a.include_vendor, a.max_files)
+        result = scan(a.root, a.include_vendor, a.max_files, a.audio)
         text = to_markdown(result) if a.md else json.dumps(result, indent=2)
     except Exception as exc:  # fail soft
         text = json.dumps({"tool": "juice_scan.py", "version": VERSION, "error": f"{type(exc).__name__}: {exc}"})
