@@ -19,7 +19,7 @@ import re
 import sys
 from datetime import datetime
 
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "Library", "Temp", "Logs", "obj", "bin",
@@ -248,6 +248,71 @@ FEEL_LITERAL_RX = re.compile(
 LAUNCH_NAME_RX = re.compile(r"(?i)spring|bounce|launch|stomp|trampoline|jump_?pad|boost")
 UPWARD_RX = re.compile(r"(?i)velocity\.y|vel\.y|\bvy\b|velocity_y|setVelocityY|AssemblyLinearVelocity|\.velocity\s*=")
 
+# Hit-stop against hit rate (idea from technique-harvest post 1xajfgh: fixed freezes read as stutter on fast
+# weapons). Durations: literals named for hit-stop, or the first number passed to a hit-stop call.
+_TYPED_ASSIGN = r"\s*(?::\s*[\w.]+\s*)?(?::=|=|:)\s*"
+HITSTOP_LIT_RX = re.compile(r"(?i)\b(\w*(?:hit_?stop|hit_?pause|freeze_?frame|freeze_?time|freeze_?duration)\w*)" + _TYPED_ASSIGN + r"(\d*\.?\d+)(f|ms)?\b")
+HITSTOP_CALL_RX = re.compile(r"(?i)\b(\w*(?:hit_?stop|hit_?pause|freeze_?frame|freeze))\s*\(\s*(\d*\.?\d+)(f|ms)?\s*[,)]")
+HITSTOP_NOT_DURATION = re.compile(r"(?i)enabled|scale|strength|count|chance|max_?stack")
+# Time between hits: cooldowns, fire rates, attack intervals.
+INTERVAL_LIT_RX = re.compile(
+    r"(?i)\b(\w*(?:fire_?rate|rate_?of_?fire|attack_?(?:cooldown|interval|delay|rate)|shot_?(?:cooldown|delay|interval)|"
+    r"fire_?(?:delay|interval|cooldown)|swing_?(?:cooldown|interval)|time_?between_?(?:shots|attacks|hits|swings)|"
+    r"weapon_?cooldown|shoot_?cooldown|hit_?cooldown)\w*)" + _TYPED_ASSIGN + r"(\d*\.?\d+)(f|ms)?\b")
+# A hit-stop that already scales with the rate of hits names one of these on a line that sets or calls the
+# freeze. Lines are matched after snake-casing (sinceLastHit -> since_last_hit), so words need a boundary.
+HITSTOP_SCALE_RX = re.compile(r"(?<![a-z])(combo|consecutive|last_hit|since_last|streak|hit_count|in_a_row|rate|cooldown|"
+                              r"interval|attack_speed|final_hit|is_final|finisher|recent)")
+HITSTOP_ANY_RX = re.compile(r"hit_?stop|hit_?pause|freeze_?frame|freeze\w*\s*\(|\bfreeze\b")
+
+
+def _snake(line: str) -> str:
+    return re.sub(r"([a-z0-9])([A-Z])", r"\1_\2", line).lower()
+
+
+def hitstop_scales_with_rate(body: str) -> bool:
+    """True when a line naming the freeze also names the rate of hits (combo, cooldown, time since last hit)."""
+    for line in body.splitlines():
+        n = _snake(line)
+        if HITSTOP_ANY_RX.search(n) and HITSTOP_SCALE_RX.search(n):
+            return True
+    return False
+# Rule numbers (start values, tune by eye): a freeze longer than a quarter of the gap between hits, or any fixed
+# freeze at 4+ hits a second, stacks into stutter.
+HITSTOP_MAX_SHARE = 0.25
+FAST_HIT_GAP_S = 0.25
+
+# Locomotion: a walk or run clip played at a fixed rate while the body's speed changes slides the feet.
+WALK_ANIM_RX = re.compile(
+    r"""(?i)(?:\bplay\w*|\btravel|crossfade\w*|setbool|settrigger|playanimation)\s*\(\s*["'][\w/ ]*?(walk|run|jog|sprint|locomotion)\w*["']"""
+    r"""|\banimation\s*=\s*["'](walk|run|jog|sprint)\w*["']""")
+ANIM_SYNC_RX = re.compile(
+    r"""(?i)speed_scale\s*=|playback_?(?:speed|rate)|\banimator\.speed\s*=|\banim\w*\.speed\s*=|setfloat\(\s*["']\w*(?:speed|velocity|move)"""
+    r"""|adjustspeed\(|anims\.timescale|msperframe|blend_position|blend_amount|blendspace|applyrootmotion|root_?motion|foot_?ik"""
+    r"""|setikposition|stride|\bplay\(\s*["']\w+["']\s*,\s*-?[\d.]+\s*,\s*[a-z_]""")
+MOVE_SPEED_LIT_RX = re.compile(r"(?i)\b(\w*(?:move|walk|run|max|sprint)_?speed\w*|speed)" + _TYPED_ASSIGN + r"(\d*\.?\d+)f?\b")
+# Playback rate outside this band of the clip's authored speed looks wrong; blend to the next clip instead.
+ANIM_RATE_BAND = (0.8, 1.25)
+
+
+def _seconds(name: str, value: float, suffix: str = "") -> float:
+    """Convert a duration literal to seconds from its name, suffix and size."""
+    n = name.lower()
+    if re.search(r"frames", n):
+        return value / 60.0
+    if suffix.lower() == "ms" or re.search(r"(^|_)ms$|_ms_|ms$|millis|msec", n) or value > 10:
+        return value / 1000.0
+    return value
+
+
+def _interval_seconds(name: str, value: float, suffix: str = "") -> float:
+    """A 'rate' above 1 is hits per second; everything else is seconds (or ms) between hits."""
+    n = name.lower()
+    if "rate" in n and not re.search(r"interval|delay|cooldown", n) and value > 1 and suffix.lower() != "ms":
+        return 1.0 / value
+    return _seconds(name, value, suffix)
+
+
 # Over-juice / risk heuristics, checked line by line.
 RISKS = [
     ("timescale_zero", r"(timeScale|time_scale)\s*=\s*0(\.0)?\b", "Time is frozen here; confirm it is restored on every path (including scene change and pause) or the game can lock."),
@@ -333,6 +398,12 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
     func_count = 0
     feel_literal_files = []
     launches = []
+    hitstop_durations: list[tuple[float, str]] = []
+    hit_intervals: list[tuple[float, str]] = []
+    hitstop_scaled: list[str] = []
+    walk_anims: list[str] = []
+    anim_synced: list[str] = []
+    move_speeds: list[tuple[float, str]] = []
 
     for path in files:
         rel = os.path.relpath(path, root).replace("\\", "/")
@@ -350,6 +421,7 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
                 project_flags[k].append(f"{rel}:{line}")
         if FEEL_LITERAL_RX.search(text):
             feel_literal_files.append(rel)
+        collect_rate_and_locomotion(text, rel, hitstop_durations, hit_intervals, walk_anims, anim_synced, move_speeds)
         lines = text.splitlines()
         for name, start, end in split_functions(lines, lang):
             func_count += 1
@@ -367,6 +439,8 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
             if LAUNCH_NAME_RX.search(short) and UPWARD_RX.search(body):
                 resets = [k for k in ("coyote", "buffer") if re.search(k, body, re.I)]
                 launches.append({"file": rel, "function": name, "line": start, "resets": resets})
+            if hitstop_scales_with_rate(body):
+                hitstop_scaled.append(f"{rel}:{start} {name}")
             cls = classify(name, body, rel, end - start)
             if not cls:
                 continue
@@ -420,6 +494,9 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
                              "why": "A spring, bounce or launch path sets upward velocity without clearing both the coyote and jump-buffer timers, so a buffered jump can fire on top of it (P-29).",
                              "where": leaky[:8]})
 
+    findings += rate_and_locomotion_findings(project_flags["hit_stop"], hitstop_durations, hit_intervals,
+                                             hitstop_scaled, walk_anims, anim_synced, move_speeds)
+
     by_moment: dict[str, int] = {}
     for m in moments:
         by_moment[m["moment"]] = by_moment.get(m["moment"], 0) + 1
@@ -442,6 +519,80 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000) -> dict
         "risks": risks,
         "note": "Heuristic map from names and calls. Read each function before suggesting; confidence=low entries are often false positives.",
     }
+
+
+def collect_rate_and_locomotion(text, rel, durations, intervals, walk_anims, synced, speeds) -> None:
+    """Gather hit-stop durations, gaps between hits, walk/run plays, speed sync and move speeds in one file."""
+    def where(m):
+        return f"{rel}:{text.count(chr(10), 0, m.start()) + 1}"
+    for rx in (HITSTOP_LIT_RX, HITSTOP_CALL_RX):
+        for m in rx.finditer(text):
+            if HITSTOP_NOT_DURATION.search(m.group(1)):
+                continue
+            secs = _seconds(m.group(1), float(m.group(2)), m.group(3) or "")
+            if 0 < secs <= 1.0:
+                durations.append((round(secs, 4), where(m)))
+    for m in INTERVAL_LIT_RX.finditer(text):
+        secs = _interval_seconds(m.group(1), float(m.group(2)), m.group(3) or "")
+        if 0 < secs <= 5.0:
+            intervals.append((round(secs, 4), where(m)))
+    for m in WALK_ANIM_RX.finditer(text):
+        walk_anims.append(where(m))
+    for m in ANIM_SYNC_RX.finditer(text):
+        synced.append(where(m))
+    for m in MOVE_SPEED_LIT_RX.finditer(text):
+        v = float(m.group(2))
+        if v > 0:
+            speeds.append((v, where(m)))
+
+
+def rate_and_locomotion_findings(hit_stop_flags, durations, intervals, scaled, walk_anims, synced, speeds) -> list:
+    """hit_stop_ignores_hit_rate and anim_speed_not_tied_to_move_speed, with the numbers behind each."""
+    out = []
+    if (hit_stop_flags or durations) and not scaled:
+        freeze = max(durations)[0] if durations else None
+        gap = min(intervals)[0] if intervals else None
+        share = round(freeze / gap, 2) if freeze and gap else None
+        fast = gap is not None and gap < FAST_HIT_GAP_S
+        if share is not None and (share >= HITSTOP_MAX_SHARE or fast):
+            severity = "high" if share >= 2 * HITSTOP_MAX_SHARE else "medium"
+        elif gap is None:
+            severity = "low"
+        else:
+            severity = None  # slow hits: a fixed freeze is fine
+        if severity:
+            nums = []
+            if freeze is not None:
+                nums.append(f"longest freeze {round(freeze * 1000)} ms")
+            if gap is not None:
+                nums.append(f"shortest gap between hits {round(gap * 1000)} ms")
+            if share is not None:
+                nums.append(f"freeze is {round(share * 100)}% of that gap")
+            out.append({
+                "id": "hit_stop_ignores_hit_rate", "severity": severity,
+                "why": ("Hit-stop is a fixed length and nothing near it reads the rate of hits (combo, cooldown, time since "
+                        "the last hit), so fast weapons stack freezes into stutter. Keep the freeze under "
+                        f"{round(HITSTOP_MAX_SHARE * 100)}% of the gap between hits; at {round(1 / FAST_HIT_GAP_S)}+ hits a "
+                        "second cut it to 30 ms or less, or freeze only the last hit of a combo"
+                        + (" (" + "; ".join(nums) + ")." if nums else ". No attack rate was found; check the fastest weapon.")),
+                "numbers": {"freeze_s": freeze, "gap_s": gap, "share": share,
+                            "max_share": HITSTOP_MAX_SHARE, "fast_gap_s": FAST_HIT_GAP_S},
+                "where": ([w for _, w in sorted(durations, reverse=True)[:3]] + [w for _, w in sorted(intervals)[:3]])
+                         or hit_stop_flags[:5],
+            })
+    if walk_anims and not synced:
+        top = max(speeds)[0] if speeds else None
+        lo, hi = ANIM_RATE_BAND
+        out.append({
+            "id": "anim_speed_not_tied_to_move_speed", "severity": "medium",
+            "why": ("A walk or run clip plays at a fixed rate and nothing sets its playback speed, blend or root motion from "
+                    "the body's speed, so the feet slide. Set playback rate = ground speed / the clip's authored stride speed; "
+                    f"keep it within {lo}-{hi}x and blend to the next clip outside that band, or drive the body by root motion "
+                    "or foot IK" + (f" (move speeds up to {top:g} found)." if top is not None else ".")),
+            "numbers": {"rate_band": [lo, hi], "max_move_speed": top},
+            "where": walk_anims[:8],
+        })
+    return out
 
 
 def to_markdown(r: dict) -> str:

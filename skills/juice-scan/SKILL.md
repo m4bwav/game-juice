@@ -31,7 +31,7 @@ Open every `high` and `medium` moment's function, plus any `low` one that is the
 - the moment is real (remove false positives from the report),
 - what feedback actually exists, including what is called indirectly (an `AudioManager.Play`, an animator event, a signal another script connects to; grep for the callee),
 - timing: input-to-response frames, lockouts, hit-stop, coyote and buffer windows.
-- movement and hits: animation rate tied to ground speed (no foot sliding), knockback that plays steps instead of sliding a pose, hit-stop shortened on fast repeated hits.
+- movement and hits: animation rate tied to ground speed (no foot sliding), knockback that plays steps instead of sliding a pose, hit-stop shortened on fast repeated hits. The scanner findings `anim_speed_not_tied_to_move_speed` and `hit_stop_ignores_hit_rate` carry the numbers to confirm (freeze against the gap between hits, move speeds).
 
 Classify the feel before judging it (P-23): which of real-time control, simulated space and polish the game has. A game with polish only (cards, turns, menus) gets presentation goals: judge its UI, reveal and turn moments, not jump or aim timing. Then write down the properties the code implies (P-24, P-25): avatar speed, jump height, gravity, acceleration, lives or hit points, caps; give each with its file and line, or `not found`.
 

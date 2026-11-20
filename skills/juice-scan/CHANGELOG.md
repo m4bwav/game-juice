@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261120-1 · 2026-11-20 · Hit-stop against hit rate, clip speed against move speed (1.3.12)
+- because: user request (technique-harvest verdict #33, post 1xajfgh: fixed hit-stop read as glitchy on fast weapons, feet slid when clip rate ignored ground speed; ideas only, no code in the source)
+- files: scripts/juice_scan.py (1.3.0), tests/check_scan.py, tests/fixtures/godot-wave-hero, tests/fixtures/unity-wave-hero, SKILL.md (Step 2 movement and hits bullet)
+- New findings with numbers. hit_stop_ignores_hit_rate: the longest hit-stop literal against the shortest attack gap (cooldown, fire rate, interval); flagged when no line that sets the freeze reads combo, cooldown or time since the last hit and the freeze is 25% or more of the gap or hits come 4+ a second (high at 50%+, low when no rate was found). anim_speed_not_tied_to_move_speed: a walk or run clip is played and nothing sets playback speed, a blend parameter, root motion or foot IK; the advice keeps rate = ground speed / stride speed within 0.8-1.25x. Thresholds are our start values. Triggers unchanged, so evals were not re-run.
+
 ### C-20261119-2 · 2026-11-19 · Frozen feel table and launch timer resets (1.3.11)
 - because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
 - files: scripts/juice_scan.py (1.2.0), tests/check_scan.py, tests/fixtures/web-platformer
