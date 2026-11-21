@@ -24,3 +24,5 @@ jobs:
         run: python tests/check_skills.py
       - name: scanner against the sample games
         run: python tests/check_scan.py
+      - name: count-up timeline planner
+        run: python tests/check_countup.py

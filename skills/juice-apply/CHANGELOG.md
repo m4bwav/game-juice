@@ -7,6 +7,11 @@ Entry shape: `### C-20261118-1 · 2026-11-18 · Damage-through-controls toggle (
 - files: references/accessibility.md (settings table)
 - Adds a default-on toggle for the low-health handling effect. Triggers unchanged, so evals were not re-run.
 
+### C-20261121-1 · 2026-11-21 · Count-up timeline planner (1.6.0)
+- because: user request (itch.io technique harvest; values measured in play and read from a closed web game's page scripts with the user's yes)
+- files: scripts/countup_plan.py, SKILL.md (Step 3), tests/check_countup.py, CI workflows
+- New stdlib script: staged score reveal timeline as JSON. Count-up 300 ms plus 300 ms per size tier (150, 2,500, 40,000; overkill of 3x the target adds a tier), quartic ease-out, component stagger 240 ms x 0.93^i with a 90 ms floor, 260 ms gather, hit-stop 40/90/160/320 ms, log-scaled shake trauma, 500 ms health readout with the ghost bar at 380 ms, staggers compressed to a 6 s cap. Replaces the fixed 0.3 s count-up advice for reveals. Triggers unchanged, so evals were not re-run.
+
 ### C-20261119-2 · 2026-11-19 · Frozen feel table and launch timer resets (1.3.11)
 - because: user request (technique-harvest: a commercial web platformer, idea only, nothing copied)
 - files: SKILL.md (constants rule)
