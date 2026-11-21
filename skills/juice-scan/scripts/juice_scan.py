@@ -24,7 +24,7 @@ import re
 import sys
 from datetime import datetime
 
-VERSION = "1.4.0"
+VERSION = "1.5.2"
 
 SKIP_DIRS = {
     ".git", ".hg", ".svn", "node_modules", "Library", "Temp", "Logs", "obj", "bin",
@@ -545,6 +545,7 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000, audio: 
     findings += dodge_findings(texts, funcs)
     findings += stagger_findings(funcs)
     findings += reduce_motion_findings(texts, funcs, project_flags["reduce_motion_toggle"])
+    findings += loop_animation_findings(root, include_vendor)
 
     by_moment: dict[str, int] = {}
     for m in moments:
@@ -810,6 +811,37 @@ def reduce_motion_findings(texts, funcs, toggle_flags) -> list:
                 "the setting does nothing in play. Read it where the shake offset is written: scale the amplitude by "
                 "the setting (0 when reduce motion is on) (P-18, J12)."),
         "where": toggle_flags[:3] + [f"{r}:{ln} {n}" for r, n, ln, _ in shakers[:5]],
+    }]
+
+
+# --- looping CSS animations (idea: a browser game's shipped CSS, technique-harvest 2026-11) -----------
+INFINITE_ANIM_RX = re.compile(r"animation(?:-iteration-count)?\s*:[^;{}]*\binfinite\b")
+
+
+def loop_animation_findings(root: str, include_vendor: bool = False) -> list:
+    """looping_animation_no_reduce: CSS loops forever and no stylesheet has a prefers-reduced-motion rule."""
+    loops, has_reduce = [], False
+    for dirpath, dirnames, filenames in os.walk(root):
+        dirnames[:] = [d for d in dirnames if d not in SKIP_DIRS and not d.startswith(".")
+                       and (include_vendor or d not in VENDOR_DIRS)]
+        for f in filenames:
+            if os.path.splitext(f)[1].lower() not in (".css", ".html", ".htm", ".scss"):
+                continue
+            path = os.path.join(dirpath, f)
+            text = _read(path)
+            if "prefers-reduced-motion" in text:
+                has_reduce = True
+            for m in INFINITE_ANIM_RX.finditer(text):
+                rel = os.path.relpath(path, root).replace(os.sep, "/")
+                loops.append(f"{rel}:{text.count(chr(10), 0, m.start()) + 1}")
+    if not loops or has_reduce:
+        return []
+    return [{
+        "id": "looping_animation_no_reduce", "severity": "medium",
+        "why": ("CSS animations loop forever but no prefers-reduced-motion rule stops them. Give every looping or "
+                "ambient animation a reduced-motion override and an in-game 'still' setting that holds a static end "
+                "state (do not remove the element) (P-18, WCAG 2.2.2 and 2.3.3)."),
+        "where": loops[:5],
     }]
 
 
