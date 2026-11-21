@@ -7,6 +7,11 @@ Entry shape: `### C-20261118-1 · 2026-11-18 · Damage-through-controls toggle (
 - files: references/accessibility.md (settings table)
 - Adds a default-on toggle for the low-health handling effect. Triggers unchanged, so evals were not re-run.
 
+### C-20261121-2 · 2026-11-21 · Impact burst bullet (1.7.0)
+- because: harvest: RimWorld local harvest 2026-11-21 (technique observed in RimWorld's shipped defs, 2026-11-21)
+- files: SKILL.md (Step 3)
+- One bullet pointing impact bursts at the new "Impact composite" row in juice-principles. Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-1 · 2026-11-21 · Count-up timeline planner (1.6.0)
 - because: user request (itch.io technique harvest; values measured in play and read from a closed web game's page scripts with the user's yes)
 - files: scripts/countup_plan.py, SKILL.md (Step 3), tests/check_countup.py, CI workflows
