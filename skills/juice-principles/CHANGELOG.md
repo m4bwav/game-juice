@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261121-3 · 2026-11-21 · Impact composite row; particle life depends on role (1.7.0)
+- because: harvest: RimWorld local harvest 2026-11-21 (technique observed in RimWorld's shipped defs, 2026-11-21; idea and a few numbers only, nothing copied)
+- files: references/principles.md (parameter table)
+- New "Impact composite" row (single-job layers, role-based lifetimes, ranges on every value, drag and shrink on sparks, optional delayed second beat, shake for big events only); "Particles on impact" now gives life per role instead of one range. Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-2 · 2026-11-21 · Card play anatomy, turn handoff and kill to reward rows; hit timing becomes a range (1.5.1)
 - because: user request (technique-harvest local install harvest 2026-11: a commercial deckbuilder played live as a user and recorded at about 58 fps, tier A only, idea only, nothing copied, no game named)
 - files: references/principles.md (parameter table)

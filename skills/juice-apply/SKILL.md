@@ -32,6 +32,7 @@ If the project has no juice settings yet, add the settings hook from the engine 
 - Keep feedback out of game rules. Damage, scores, and collisions must behave the same with every toggle off (that is what makes it juice). With the toggles off, the game must play exactly as before.
 - Anything that touches time (hit-stop, slow-mo) restores it on every path, including scene change and death. Note the engine traps in the reference.
 - Pool particles and cap stacking (P-15).
+- Impact bursts: build them as layers with role-based lifetimes and a range on every value (principles table, "Impact composite" row); no shake on ordinary hits.
 - Score or damage reveals (P-08): get the timeline from `scripts/countup_plan.py --value N --target HP --components a,b` (staged pops, count-up length by size tier, hit-stop, shake, health readout) and put its numbers in the constants table.
 - Roblox: camera and UI effects go on the client, triggered by a RemoteEvent from the server when the moment is server-side.
 
