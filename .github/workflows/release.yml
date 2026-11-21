@@ -22,6 +22,8 @@ jobs:
         run: python tests/check_skills.py
       - name: scanner checks
         run: python tests/check_scan.py
+      - name: count-up timeline planner
+        run: python tests/check_countup.py
       - name: pack
         run: python scripts/pack.py
       - name: publish the release
