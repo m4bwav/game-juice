@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261121-2 · 2026-11-21 · looping_animation_no_reduce finding; still toggle rule (1.5.2)
+- because: user request (technique harvest of a browser game's shipped CSS and JS; no licence, so methods and numbers only, nothing copied)
+- files: scripts/juice_scan.py (loop_animation_findings), SKILL.md (findings list), tests/check_scan.py, tests/fixtures/web-loop-glow, tests/fixtures/web-loop-glow-still, juice-apply references/accessibility.md (looping row)
+- An infinite CSS animation in a project with no prefers-reduced-motion rule is flagged. juice-apply's accessibility table adds the rule that every loop stops under reduced motion and an in-game still toggle, holding a static end state. Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-1 · 2026-11-21 · batch_resolve_without_stagger finding (1.5.0)
 - because: user request (technique-harvest local install harvest 2026-11: a commercial turn-based dice game, tier A only (its store clips and release trailer watched as a viewer, measured frame by frame), idea only, nothing copied, no game named)
 - files: scripts/juice_scan.py (stagger_findings), SKILL.md (findings list), tests/check_scan.py, tests/fixtures/web-dice-flat, tests/fixtures/web-dice-stagger

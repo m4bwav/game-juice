@@ -6,6 +6,7 @@ Back to [SKILL.md](../SKILL.md). Sources and dates: [RESEARCH.md](../RESEARCH.md
 |---|---|---|---|
 | Screen shake intensity | 100% (slider 0-100) | scales all shake and camera kick; 0 must mean off | Game Accessibility Guidelines (camera movement item); XAG 117 (an off option is required, sliders are its examples) |
 | Reduce motion | off, or on when the OS/browser asks (`prefers-reduced-motion`, Roblox `GuiService.ReducedMotionEnabled`) | shake 0, kick 0, head bob 0, tween durations halved, no parallax | WCAG 2.2 SC 2.3.3; XAG 117 |
+| Looping and ambient animation | on | every loop (glow, pulse, bob, idle wiggle) stops under reduced motion and under an in-game 'still' toggle; it holds a static end state (for example a glint at full opacity, a fill bar at 60%), never vanishes | WCAG 2.2 SC 2.2.2, 2.3.3 |
 | Flashes | on, capped | flashes covering about 20% of the screen or more stay at 3 per second or fewer, no saturated red flash; off turns full-screen flashes into a vignette or nothing | WCAG 2.2 SC 2.3.1; XAG 118 |
 | Hit-stop | on | some players find freezes disorienting; off keeps every other channel | practitioner convention |
 | Damage through controls | on, with its own toggle | low-health steering slow-down and aim drift (juice-principles parameter table) can be switched off without losing shake or flash; never apply it where precise aim is an accessibility need | practitioner convention |
