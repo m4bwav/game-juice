@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261121-1 · 2026-11-21 · Staggered resolution, reward reveal and turn-based kill rows (1.5.0)
+- because: user request (technique-harvest local install harvest 2026-11: a commercial turn-based dice game, tier A only (its store clips and release trailer watched as a viewer, measured frame by frame), idea only, nothing copied, no game named)
+- files: references/principles.md (parameter table)
+- Three rows from measured frames: items resolved about 100 ms apart with a popping total, a rarity-tinted silhouette reveal of about 350 ms, and a 150-170 ms white silhouette kill with no camera shake (no shake was found in any of the measured clips). Triggers unchanged, so evals were not re-run.
+
 ### C-20261120-2 · 2026-11-20 · P-05 buffers attack and dash with per-press expiry (1.4.1)
 - because: user request (book round: Campos, Game Development Patterns with Godot 4, ch. 13)
 - files: references/principles.md (P-05, parameter table coyote row)

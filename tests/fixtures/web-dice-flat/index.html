@@ -1,0 +1,17 @@
+<!doctype html>
+<html><body><canvas id="c"></canvas>
+<script>
+// A dice roll that shows every result at once.
+const dice = [];
+let total = 0;
+
+function rollAll() {
+  for (const d of dice) {
+    d.value = 1 + Math.floor(Math.random() * 6);
+    d.flash = 1;
+    sfx.play('land');
+    total += d.value;
+  }
+  drawTotal(total);
+}
+</script></body></html>
