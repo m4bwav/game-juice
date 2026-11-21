@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261121-2 · 2026-11-21 · Card play anatomy, turn handoff and kill to reward rows; hit timing becomes a range (1.5.1)
+- because: user request (technique-harvest local install harvest 2026-11: a commercial deckbuilder played live as a user and recorded at about 58 fps, tier A only, idea only, nothing copied, no game named)
+- files: references/principles.md (parameter table)
+- Three rows from measured frames (card play spot and discard arc that leaves input open, turn banner handoff, dim-and-fade reward after a kill); turn-based hit timing now 70-220 ms across two games; turn-based kill gains a dissolve style. Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-1 · 2026-11-21 · Staggered resolution, reward reveal and turn-based kill rows (1.5.0)
 - because: user request (technique-harvest local install harvest 2026-11: a commercial turn-based dice game, tier A only (its store clips and release trailer watched as a viewer, measured frame by frame), idea only, nothing copied, no game named)
 - files: references/principles.md (parameter table)
