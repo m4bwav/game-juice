@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261120-2 · 2026-11-20 · P-05 buffers attack and dash with per-press expiry (1.4.1)
+- because: user request (book round: Campos, Game Development Patterns with Godot 4, ch. 13)
+- files: references/principles.md (P-05, parameter table coyote row)
+- P-05 now buffers every core action, gives each press its own expiry, ignores key-repeat echoes and asks the designer to decide whether a buffered jump must still be held at landing. Triggers unchanged, so evals were not re-run.
+
 ### C-20261120-1 · 2026-11-20 · Web-game harvest rows: transitions, streaks, haptics, timing bands, crashes, audio, turn-based feedback (1.4.0)
 - because: user request (technique-harvest web-game harvest 2026-11, measured by play and written fresh, nothing copied: maumoya/boredom-blaster-play, sw897/one-tap-skyline, waleee7/peach-dash, dcjaychou/design-ridge-run, pkieltyka/zubspace, tianlinx/spire-echoes, luizbizzio/scandeck, larryzpl123/skybreak-protocol (MIT), vitaminclaude/voidstruck (PolyForm Strict, play and measure only))
 - files: references/principles.md (parameter table)
