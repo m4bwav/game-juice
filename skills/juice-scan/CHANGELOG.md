@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261120-3 · 2026-11-20 · Godot traps: freed parent, shared material flash, music autoload (1.4.1)
+- because: R-20261120-1; user request (book round: Campos, Game Development Patterns with Godot 4, Godot 4.3)
+- files: references/engines/godot.md (Godot traps)
+- Three trap lines: effects parented to a node being freed vanish (parent to the level), a flash on a shared ShaderMaterial flashes every instance (reader extension, check on 4.3+), music outside an autoload dies on scene change (cross-fade, restore on leaving an area). The scanner is unchanged: the idea of flagging AnimationTree transitions that wait for a clip's end as a hidden input lock is noted only, since juice_scan.py has no declarative rules list to slot it into and no real project to test it on. Triggers unchanged, so evals were not re-run.
+
 ### C-20261120-2 · 2026-11-20 · Single-file HTML games, streak, dodge, reduce-motion and audio findings (1.4.0)
 - because: user request (technique-harvest web-game harvest 2026-11, measured by play and written fresh, nothing copied: maumoya/boredom-blaster-play, sw897/one-tap-skyline, waleee7/peach-dash, dcjaychou/design-ridge-run, pkieltyka/zubspace, tianlinx/spire-echoes, luizbizzio/scandeck, larryzpl123/skybreak-protocol (MIT), vitaminclaude/voidstruck (PolyForm Strict, play and measure only)); L-004
 - files: scripts/juice_scan.py (1.4.0), tests/check_scan.py, 13 new fixtures under tests/fixtures (web-single-file*, web-streak-*, web-runner-*, web-vehicle-airtime, web-platformer-space, web-reduce-*, web-audio-*, godot-thruster), SKILL.md (Step 1 output paragraph, Step 2 bullets)

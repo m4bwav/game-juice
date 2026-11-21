@@ -45,6 +45,13 @@ Best sources: vendor changelogs and official engine docs first; DevForum and Pha
 
 Newest first. `Track` is subject, tooling, practice, or testing. All dates accessed: 2026-10-26. The core juice research (talks, accessibility) lives in [juice-principles' RESEARCH.md](../juice-principles/RESEARCH.md) (its 2026-10-26 entries); this file holds what is specific to this skill.
 
+### R-20261120-1 · 2026-11-20 · Godot: freed parents, shared materials, instance uniforms, autoload music
+- Summary: Campos (Game Development Patterns with Godot 4, Packt 2024, written for 4.3) ch. 7 parents spawned effects and loot to a level container so they outlive the spawner, ch. 11 warns that Resources are shared by reference unless made unique, ch. 5 and 12 keep music in an autoload with a cross-fade. The shared ShaderMaterial flash is our extension of the Resource rule: the stable shading-language docs say avoiding per-object uniforms otherwise needs a unique material per object, and per-instance uniforms were spatial-only in the 4.3 docs but cover canvas_item in the stable docs (checked 2026-11-20). Book rules, unverified in a project.
+- Track: subject
+- Sources: Campos ch. 5, 7, 11, 12; https://docs.godotengine.org/en/4.3/tutorials/shaders/shader_reference/shading_language.html ; https://docs.godotengine.org/en/stable/tutorials/shaders/shader_reference/shading_language.html
+- Magnitude: 0.1 (three new trap lines)
+- Applied: C-20261120-3
+
 ### R-20261026-8 · 2026-10-26 · Phaser Arcade `physics.world.timeScale`: higher is slower (verified)
 - Summary: The Arcade `World#timeScale` doc comment reads 1.0 normal, 2.0 half speed, 0.5 double speed (since 3.10.0), unchanged in v3.90.0 and in the current master (Phaser 4.2.1). So `this.physics.world.timeScale = 3` in web.md's restart beat is a slow-motion, as written. Phaser 4 is now the current major; the web.md sketches use the Phaser 3 API, which this pass did not re-check against Phaser 4 beyond this property.
 - Track: subject

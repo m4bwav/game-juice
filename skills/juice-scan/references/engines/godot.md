@@ -98,3 +98,6 @@ When the jump is in `_unhandled_input`, move it into the buffer instead of jumpi
 
 - `Engine.time_scale = 0` stops `create_tween()` too unless you call `tween.set_ignore_time_scale(true)` (Godot 4.4+; on 4.3 and older, wait on a `create_timer(..., true)` instead), and physics stops with it.
 - `reload_current_scene()` in `die()` cuts every effect off. Add a short death beat (0.3-0.6 s of tween, particles, and sound) before the reload: a signature-moment candidate.
+- An effect, pop label or loot added as a child of the node you `queue_free` vanishes with it. Add it to the level or a container node instead (book rule, Campos ch. 7).
+- A hit flash written to a shader uniform on a shared `ShaderMaterial` flashes every node using it. Tick Local to Scene, duplicate the material per instance, or use an `instance uniform` (spatial only on 4.3; 2D needs a newer 4.x). Reader extension of the book's shared-Resource rule (Campos ch. 11); check on 4.3+.
+- Music on a player inside the level stops on every scene change or death reload. Keep it in an autoload, cross-fade with a second player (the book uses 0.3 s; tune by ear) and restore the previous track when leaving an ambience area (Campos ch. 5, 12).

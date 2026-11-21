@@ -14,7 +14,7 @@ Each principle has an ID (`P-xx`) so reports can cite it in a few characters. Th
 
 **P-04 Stop time to mark impact (hit-stop).** Freezing or slowing the moment of contact for a few frames gives the brain time to register it and sells force. Scale the pause with the strength of the hit, and keep input buffered through it. In games: 2-6 frames (about 30-100 ms) for normal hits, longer for finishers; never on every bullet of a fast weapon. *Rogers 2e ch. 14 p. 364; Nijman 2013 and Sakurai, see RESEARCH.md.*
 
-**P-05 Forgive intent at the edges.** Keep player intent alive briefly when the rules would otherwise discard it: accept a jump a few frames after leaving a ledge (coyote time) or a few frames before landing (input buffer). This removes friction that has nothing to do with the intended challenge. In games: coyote 80-150 ms, jump buffer 100-150 ms. *Swink ch. 6 pp. 121-137, ch. 13; Hodent ch. 11 "Minimum Workload"; Thorson 2018.*
+**P-05 Forgive intent at the edges.** Keep player intent alive briefly when the rules would otherwise discard it: accept a jump a few frames after leaving a ledge (coyote time) or a few frames before landing (input buffer). This removes friction that has nothing to do with the intended challenge. Buffer every core action, not only jump: attack and dash presses wait the same way. Give each stored press its own expiry (one timer for the whole queue lets later presses outlive the window), ignore key-repeat echoes, and consume the press that fired. Decide whether a buffered jump still needs the button held at landing: requiring it suits variable-height jumps but drops quick early taps, which most buffers exist to catch. In games: coyote 80-150 ms, jump buffer 100-150 ms. *Swink ch. 6 pp. 121-137, ch. 13; Hodent ch. 11 "Minimum Workload"; Thorson 2018; Campos, Game Development Patterns with Godot 4, ch. 13 (action buffer).*
 
 ## B. Layering: one event, many channels
 
@@ -87,7 +87,7 @@ These are starting values that published talks and the books converge on, not ru
 | Pickup | pop scale 1.3 then 0, 150-250 ms; pitch climbs on a streak | P-09, P-11 |
 | Damage flash | white or tint for 1-3 frames (≤ 100 ms) | never full screen faster than 3 Hz (P-18); Godot: `modulate` above 1 is the cheap flash, but it multiplies colour so dark pixels stay dark; a flash shader gives true white |
 | Pitch variation | ±5-10% random per play | P-09 |
-| Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05; a held jump adds lift while the button stays down; every launch clears both timers (P-29) |
+| Coyote time / jump buffer | 80-150 ms / 100-150 ms | P-05; attack and dash use the same buffer, expiry per press, echoes ignored; a held jump adds lift while the button stays down; every launch clears both timers (P-29) |
 | Launch squash | scale 1 ± 0.3-0.35 on the launch frame, back in 80-150 ms | the same value for jump, spring and bounce keeps them reading as one family (P-29) |
 | Step up / step down | step up about 0.6 units, snap down about 0.5, probed in 0.04-unit increments | small lips stop catching the feet; probe from high to low and keep the first clear height (P-05, P-29) |
 | Particles on impact | 6-20 particles, 0.2-0.5 s life, pooled | P-15: fewer, bigger, shorter |
