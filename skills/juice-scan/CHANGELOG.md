@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261121-1 · 2026-11-21 · batch_resolve_without_stagger finding (1.5.0)
+- because: user request (technique-harvest local install harvest 2026-11: a commercial turn-based dice game, tier A only (its store clips and release trailer watched as a viewer, measured frame by frame), idea only, nothing copied, no game named)
+- files: scripts/juice_scan.py (stagger_findings), SKILL.md (findings list), tests/check_scan.py, tests/fixtures/web-dice-flat, tests/fixtures/web-dice-stagger
+- A loop over dice, cards, loot or rewards that plays feedback for every item with no yield, await, delay or index-scaled time is flagged, with a 100 ms step and a 600 ms cap. Two fixtures prove it fires on the flat roll and stays quiet on the staggered one; the older fixtures must not gain it. Triggers unchanged, so evals were not re-run.
+
 ### C-20261120-3 · 2026-11-20 · Godot traps: freed parent, shared material flash, music autoload (1.4.1)
 - because: R-20261120-1; user request (book round: Campos, Game Development Patterns with Godot 4, Godot 4.3)
 - files: references/engines/godot.md (Godot traps)

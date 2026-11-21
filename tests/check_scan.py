@@ -58,6 +58,8 @@ EXPECT = {
     "web-audio-arena": ("web", [("attack", "index.html", "enemyShoot")], []),
     "web-audio-tuned": ("web", [("attack", "index.html", "enemyShoot")], []),
     "godot-thruster": ("godot", [], []),
+    "web-dice-flat": ("web", [], ["batch_resolve_without_stagger"]),
+    "web-dice-stagger": ("web", [], []),
 }
 # (fixture, function) -> the line it starts on in the file.
 EXPECT_LINES = {("web-single-file", "shoot"): 17, ("web-single-file", "hitPlayer"): 21,
@@ -78,13 +80,15 @@ EXPECT_FINDING_ABSENT = {"unity-wave-hero": ["hit_stop_ignores_hit_rate", "anim_
                          "web-runner-graze": ["no_near_miss", "no_graze_margin"],
                          "web-vehicle-airtime": ["no_coyote_time", "no_jump_buffer"],
                          "web-reduce-applied": ["reduce_motion_not_applied", "no_shake_toggle"],
-                         "web-reduce-menu-only": ["no_shake_toggle"]}
+                         "web-reduce-menu-only": ["no_shake_toggle"],
+                         "web-dice-stagger": ["batch_resolve_without_stagger"]}
 # The fixtures from before 1.4.0 must not gain any of the newer findings.
 for _old in ("godot-platformer", "roblox-obby", "phaser-shooter", "pygame-dodge", "unity-brawler", "web-platformer",
              "unity-deckbuilder", "godot-wave-hero", "unity-wave-hero"):
     EXPECT_FINDING_ABSENT.setdefault(_old, [])
     EXPECT_FINDING_ABSENT[_old] = EXPECT_FINDING_ABSENT[_old] + ["streak_without_pitch_ladder", "no_near_miss",
-                                                                 "no_graze_margin", "reduce_motion_not_applied"]
+                                                                 "no_graze_margin", "reduce_motion_not_applied",
+                                                                 "batch_resolve_without_stagger"]
 # The numbers behind a finding: (fixture, finding id, key, expected value).
 EXPECT_NUMBERS = [("godot-wave-hero", "hit_stop_ignores_hit_rate", "freeze_s", 0.12),
                   ("godot-wave-hero", "hit_stop_ignores_hit_rate", "gap_s", 0.2),

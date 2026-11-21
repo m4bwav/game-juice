@@ -543,6 +543,7 @@ def scan(root: str, include_vendor: bool = False, max_files: int = 4000, audio: 
                                              hitstop_scaled, walk_anims, anim_synced, move_speeds)
     findings += streak_findings(texts, has_audio or bool(project_audio(texts)))
     findings += dodge_findings(texts, funcs)
+    findings += stagger_findings(funcs)
     findings += reduce_motion_findings(texts, funcs, project_flags["reduce_motion_toggle"])
 
     by_moment: dict[str, int] = {}
@@ -748,6 +749,40 @@ def dodge_findings(texts, funcs) -> list:
             "where": enders[:8],
         })
     return out
+
+
+# --- staggered resolution (idea: a turn-based dice game, technique-harvest 2026-11, measured from its store clips) ---
+BATCH_LOOP_RX = re.compile(r"(?i)(?:\bfor\s*\(?[^\n]*?\b(?:in|of)\b|\bforeach\s*\(|\.forEach\s*\(|\bfor\s+\w+\s+in\b)"
+                           r"[^\n]*?\b\w*(dice|die|cards?|hand|rewards?|loot|rolls?|relics?|tiles|matches|results|"
+                           r"slots|pieces)\b")
+BATCH_FEEDBACK_RX = re.compile(r"(?i)\.play\s*\(|play_?sound|playOneShot|\bsfx|spawn|Instantiate\s*\(|particle|"
+                               r"\bflash|\bpop\s*\(|\bpunch|DO(Scale|Move|Punch|Shake|Fade)|tween|animate|"
+                               r"show_?number|damage_?number|float_?text|\.reveal\s*\(")
+STAGGER_RX = re.compile(r"(?i)\byield\b|\bawait\b|WaitForSeconds|setTimeout|SetDelay|AppendInterval|\bdelay\b|"
+                        r"stagger|create_timer|task\.wait|\bwait\s*\(|\bsleep\s*\(|\b(i|idx|index|n|k)\s*\*\s*\d")
+STAGGER = {"step_ms": 100, "max_total_ms": 600}
+
+
+def stagger_findings(funcs) -> list:
+    """batch_resolve_without_stagger: a loop over dice, cards or rewards fires feedback for every item in one frame."""
+    where = []
+    for rel, name, line, body in funcs:
+        m = BATCH_LOOP_RX.search(body)
+        if not m or STAGGER_RX.search(body):
+            continue
+        if BATCH_FEEDBACK_RX.search(body[m.end():]):
+            where.append(f"{rel}:{line + body.count(chr(10), 0, m.start())} {name}")
+    if not where:
+        return []
+    return [{
+        "id": "batch_resolve_without_stagger", "severity": "low",
+        "why": ("A loop over dice, cards or rewards plays its feedback for every item in the same frame, so five "
+                "results read as one blur. Resolve them one at a time about 100 ms apart (cap the whole run near "
+                "600 ms, or step faster for long runs), pop the running total on each step, and save the biggest "
+                "response for the last item (P-03, P-11, P-23)."),
+        "numbers": dict(STAGGER),
+        "where": where[:8],
+    }]
 
 
 # --- reduce motion read where shake is applied (idea: a side-view vehicle game, technique-harvest 2026-11) ----
