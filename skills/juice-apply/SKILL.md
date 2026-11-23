@@ -33,7 +33,7 @@ If the project has no juice settings yet, add the settings hook from the engine 
 - Anything that touches time (hit-stop, slow-mo) restores it on every path, including scene change and death. Note the engine traps in the reference.
 - Pool particles and cap stacking (P-15).
 - Impact bursts: build them as layers with role-based lifetimes and a range on every value (principles table, "Impact composite" row); no shake on ordinary hits.
-- Score or damage reveals (P-08): get the timeline from `scripts/countup_plan.py --value N --target HP --components a,b` (staged pops, count-up length by size tier, hit-stop, shake, health readout) and put its numbers in the constants table.
+- Score or damage reveals (P-08): get the timeline from `scripts/countup_plan.py --value N --target HP --components a,b` (staged pops, count-up length by size tier, hit-stop, shake, health readout) and put its numbers in the constants table; add `--triggers N` for a chained-trigger pitch ramp or `--tally-rows N` for tally pitches.
 - Roblox: camera and UI effects go on the client, triggered by a RemoteEvent from the server when the moment is server-side.
 
 ## Sfxwright, when installed

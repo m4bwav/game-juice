@@ -6,6 +6,10 @@ counts down while a ghost bar catches up. The whole timeline is compressed to fi
 
 Usage:
   countup_plan.py --value N [--target HP] [--components a,b,c] [--fps 60] [--cap-ms 6000] [--frames]
+                  [--triggers N] [--tally-rows N]
+
+--triggers N adds a chained-trigger pitch ramp (one resolution, reset per call); --tally-rows N adds tally
+row pitches.
 
 Numbers come from a measured technique harvest of a shipped game (2026-11-21) and are defaults, not
 rules: tune them in the game. Standard-library Python 3.8+. Prints one JSON object.
@@ -18,6 +22,24 @@ HITSTOP_MS = (40, 90, 160, 320)
 STAGGER_MS, STAGGER_DECAY, STAGGER_FLOOR_MS = 240, 0.93, 90
 GATHER_MS = 260
 HEALTH_MS, GHOST_DELAY_MS = 500, 380
+RAMP_BASE, RAMP_STEP, JIGGLE_DECAY = 0.86, 0.016, 5.0  # pitch per trigger rises ~1.5%; jiggle decays at 5/s
+TALLY_BASE, TALLY_STEP = 0.95, 0.06
+
+
+def trigger_ramp(n, base=RAMP_BASE, cap_ms=6000):
+    """Pitch ramp for n chained triggers inside one resolution. Starts fresh on every call (reset per resolution)."""
+    waits = [max(STAGGER_FLOOR_MS, STAGGER_MS * STAGGER_DECAY ** i) for i in range(n)]
+    scale = min(1.0, cap_ms / sum(waits)) if waits else 1.0
+    out, now = [], 0.0
+    for i, w in enumerate(waits):
+        out.append({"i": i, "t_ms": round(now), "pitch": round(base * (1 + RAMP_STEP * i), 4),
+                    "jiggle_add": 1.0, "jiggle_decay_per_s": JIGGLE_DECAY})
+        now += w * scale
+    return out
+
+
+def tally_rows(n):
+    return [{"row": i, "pitch": round(TALLY_BASE + TALLY_STEP * i, 4)} for i in range(n)]
 
 
 def tier(value, target=None):
@@ -74,9 +96,16 @@ def main(argv=None):
     ap.add_argument("--fps", type=int, default=60)
     ap.add_argument("--cap-ms", type=int, default=6000)
     ap.add_argument("--frames", action="store_true", help="list the shown value for every frame of the count-up")
+    ap.add_argument("--triggers", type=int, default=0, help="emit a chained-trigger pitch ramp for N triggers")
+    ap.add_argument("--tally-rows", type=int, default=0, help="emit rising pitches for N tally rows")
     a = ap.parse_args(argv)
     comps = [float(x) for x in a.components.split(",") if x.strip()]
-    json.dump(plan(a.value, a.target, comps, a.fps, a.cap_ms, a.frames), sys.stdout)
+    out = plan(a.value, a.target, comps, a.fps, a.cap_ms, a.frames)
+    if a.triggers:
+        out["trigger_ramp"] = trigger_ramp(a.triggers, cap_ms=a.cap_ms)
+    if a.tally_rows:
+        out["tally_rows"] = tally_rows(a.tally_rows)
+    json.dump(out, sys.stdout)
     print()
 
 

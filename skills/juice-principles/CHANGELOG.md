@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261123-2 · 2026-11-23 · Chained-trigger pitch ramp and placement preview rows (1.7.2)
+- because: harvest: local game harvest 2026-11-23 runners-up (Balatro and Backpack Hero notes; ideas and a few numbers only, nothing copied)
+- files: references/principles.md (parameter table)
+- New rows: rising pitch per chained trigger, reset per resolution, plus tally row pitch; highlight the cells a placement reads and preview the delta. Triggers unchanged, so evals were not re-run.
+
 ### C-20261123-1 · 2026-11-23 · P-30 signal a phase change with a whole-screen palette shift plus a title beat (1.7.1)
 - because: harvest: local game harvest 2026-11-23 (Thronefall trailer, luminance measured from frames; idea only, nothing copied)
 - files: references/principles.md (P-30)

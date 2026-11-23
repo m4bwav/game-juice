@@ -36,6 +36,15 @@ class CountupPlan(unittest.TestCase):
         self.assertEqual(cp.trauma(5), 0.12)
         self.assertEqual(cp.trauma(10 ** 9), 1.0)
 
+    def test_trigger_ramp_and_tally(self):
+        r = cp.trigger_ramp(10)
+        pitches = [e["pitch"] for e in r]
+        self.assertTrue(all(b > a for a, b in zip(pitches, pitches[1:])))
+        self.assertEqual(pitches[0], 0.86)
+        self.assertEqual(cp.trigger_ramp(10)[0]["pitch"], 0.86)  # reset per resolution
+        self.assertLessEqual(cp.trigger_ramp(200)[-1]["t_ms"], 6000)
+        self.assertEqual([t["pitch"] for t in cp.tally_rows(3)], [0.95, 1.01, 1.07])
+
 
 if __name__ == "__main__":
     unittest.main()
