@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261123-1 · 2026-11-23 · P-30 signal a phase change with a whole-screen palette shift plus a title beat (1.7.1)
+- because: harvest: local game harvest 2026-11-23 (Thronefall trailer, luminance measured from frames; idea only, nothing copied)
+- files: references/principles.md (P-30)
+- New principle: a mode switch reads best as a whole-frame palette and light shift with a title beat. Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-3 · 2026-11-21 · Impact composite row; particle life depends on role (1.7.0)
 - because: harvest: RimWorld local harvest 2026-11-21 (technique observed in RimWorld's shipped defs, 2026-11-21; idea and a few numbers only, nothing copied)
 - files: references/principles.md (parameter table)

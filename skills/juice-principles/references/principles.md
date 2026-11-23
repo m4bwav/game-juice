@@ -72,6 +72,8 @@ Each principle has an ID (`P-xx`) so reports can cite it in a few characters. Th
 
 **P-29 Tune feel from one frozen table; launches reset forgiveness together.** Feel numbers scattered through the code drift apart and nobody can tune them, so keep them in one named, read-only table (coyote, buffer, held-jump lift, launch squash, step heights) that a designer can read in one screen. Forgiveness windows are state, and state leaks: every event that throws the player upward (jump, spring, bounce, stomp, launch pad) clears the coyote timer, the jump buffer and any stomp flag in the same call, so a buffered press cannot fire a second jump on top of a spring. In games: a frozen constants object or resource, and one `launch(v)` helper that every upward path calls. *Thorson 2018 (forgiveness); P-05, P-27; pattern seen in a commercial web platformer, idea only.*
 
+**P-30 Signal a phase change with the whole screen.** When the game switches mode (build to fight, day to night, calm to boss), shift the palette and light of the entire frame, not one widget, and pair it with a short title beat that names the new phase. A strong overall brightness gap makes the switch readable at a glance. *Observed in the Thronefall trailer, 2026-11-23: night frames measured about 45-50 mean luminance against about 90-155 for day.*
+
 ## Parameter starting points (tune by eye, then by playtest)
 
 These are starting values that published talks and the books converge on, not rules. They are dated in RESEARCH.md.
