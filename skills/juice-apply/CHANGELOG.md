@@ -7,6 +7,11 @@ Entry shape: `### C-20261118-1 · 2026-11-18 · Damage-through-controls toggle (
 - files: references/accessibility.md (settings table)
 - Adds a default-on toggle for the low-health handling effect. Triggers unchanged, so evals were not re-run.
 
+### C-20261123-1 · 2026-11-23 · countup_plan.py --triggers and --tally-rows (1.7.2)
+- because: harvest: Balatro notes, local game harvest 2026-11-23 (written fresh from notes)
+- files: scripts/countup_plan.py, SKILL.md (Step 3), tests/check_countup.py
+- Emits a per-trigger pitch ramp (base 0.86, +1.6% each, jiggle decay 5/s, reset per call, under the cap) and tally row pitches (0.95 + 0.06 per row). Triggers unchanged, so evals were not re-run.
+
 ### C-20261121-2 · 2026-11-21 · Impact burst bullet (1.7.0)
 - because: harvest: RimWorld local harvest 2026-11-21 (technique observed in RimWorld's shipped defs, 2026-11-21)
 - files: SKILL.md (Step 3)
