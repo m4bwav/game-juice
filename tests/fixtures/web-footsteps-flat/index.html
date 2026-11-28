@@ -1,0 +1,17 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Walker, one step sound</title></head>
+<body><canvas id="c" width="960" height="540"></canvas>
+<script>
+const stepSound = new Audio('step.ogg');
+const player = { x: 0, speed: 120, stepTimer: 0 };
+function playFootstep() {
+  const s = stepSound.cloneNode();
+  s.volume = 0.2;
+  s.play();
+}
+function update(dt) {
+  player.x += player.speed * dt;
+  player.stepTimer -= dt;
+  if (player.stepTimer <= 0) { playFootstep(); player.stepTimer = 0.4; }
+}
+</script></body></html>
