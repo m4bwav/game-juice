@@ -4,6 +4,11 @@ Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with
 
 Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
+### C-20261128-1 · 2026-11-28 · Damage-scaled knockback and staged construction rows (1.7.3)
+- because: harvest: kevintngo repo harvest 2026-11-28 (ids kevintngo-voidlight and 1y66rh1-play; github.com/kevintngo/arena-fighter has no licence and github.com/kevintngo/cinderwatch is MIT: parameters and ideas only, nothing copied)
+- files: references/principles.md (parameter table)
+- New rows: knockback that grows with accumulated damage, with its hitstun, hit-stop and parry start values; a structure built piece by piece that stays idle until the last piece lands. Numbers were read from code, not measured on screen. Triggers unchanged, so evals were not re-run.
+
 ### C-20261123-2 · 2026-11-23 · Chained-trigger pitch ramp and placement preview rows (1.7.2)
 - because: harvest: local game harvest 2026-11-23 runners-up (Balatro and Backpack Hero notes; ideas and a few numbers only, nothing copied)
 - files: references/principles.md (parameter table)
