@@ -921,7 +921,34 @@ def audio_scan(texts, funcs) -> dict:
             "numbers": dict(TIERS, volumes=sorted(set(vals))),
             "where": [w for _, w in volumes[:8]],
         })
+    findings += footstep_findings(texts, funcs)
     return {"plays": plays[:60], "volumes": sorted(set(vals)), "findings": findings}
+
+
+# --- footsteps (idea: a mounted RPG's hoof sets per gait and surface, harvestwright gait-hoof-steps 2026-11) ---
+STEP_NAME_RX = re.compile(r"(?i)foot_?(?:step|fall)|hoof|\bstep_?(?:sound|sfx|player|clip)|play_?step|stride_?s(?:ound|fx)")
+SURFACE_RX = re.compile(r"(?i)surface|terrain|ground_?(?:type|tag|kind)|floor_?(?:type|tag)|physic\w*_?material|"
+                        r"\bPhysicMaterial\b|get_?collider|sharedMaterial")
+STEP_GAIT = {"walk": "about 2 footfalls/s", "gallop": "about 2x walk speed, footfall rate scales with it",
+             "variants": "3+ per surface per gait, pitch +/-5%",
+             "cadence": "step on distance travelled (stride / speed) or on the animation's contact frames, "
+                        "anim rate = speed / authored speed kept within 0.85-1.15"}
+
+
+def footstep_findings(texts, funcs) -> list:
+    """footsteps_no_surface: footstep or hoof sounds play but nothing in the project picks a set by surface."""
+    steps = [f"{rel}:{line} {name}" for rel, name, line, body in funcs
+             if PLAY_CALL_RX.search(body) and (STEP_NAME_RX.search(name) or STEP_NAME_RX.search(body))]
+    if not steps or any(SURFACE_RX.search(t) for _, t in texts):
+        return []
+    return [{
+        "id": "footsteps_no_surface", "severity": "low",
+        "why": ("Footsteps (or hooves) play one sound set everywhere, so grass, stone, wood and water all sound alike "
+                "and the ground loses its feel. Look up the surface under the foot (physics material, terrain layer or "
+                "tile tag) and pick a set per surface and per gait (walk, gallop), 3 or more takes each with a little "
+                "pitch variation; fire steps on distance or contact frames so cadence follows speed (P-09, P-14)."),
+        "numbers": STEP_GAIT, "where": steps[:8],
+    }]
 
 
 def to_markdown(r: dict) -> str:

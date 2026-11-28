@@ -62,6 +62,9 @@ EXPECT = {
     "godot-thruster": ("godot", [], []),
     "web-dice-flat": ("web", [], ["batch_resolve_without_stagger"]),
     "web-dice-stagger": ("web", [], []),
+    "web-footsteps-flat": ("web", [], []),
+    "web-footsteps-surface": ("web", [], []),
+    "godot-mount-steps": ("godot", [("movement", "mount.gd", "_physics_process")], []),
 }
 # (fixture, function) -> the line it starts on in the file.
 EXPECT_LINES = {("web-single-file", "shoot"): 17, ("web-single-file", "hitPlayer"): 21,
@@ -73,7 +76,9 @@ EXPECT_GAPS = [("web-single-file", "hitPlayer", "audio", True), ("web-single-fil
 # --audio pass: the exact set of audio findings per fixture.
 EXPECT_AUDIO = {"web-audio-arena": {"audio_no_falloff", "audio_no_headroom"},
                 "godot-thruster": {"audio_loop_restart"},
-                "web-audio-tuned": set(), "web-single-file": set()}
+                "web-audio-tuned": set(), "web-single-file": set(),
+                "web-footsteps-flat": {"footsteps_no_surface"}, "web-footsteps-surface": set(),
+                "godot-mount-steps": {"footsteps_no_surface"}}
 EXPECT_RISKS = {"unity-brawler": ["shake_per_frame"]}
 # Findings that must not fire: the tuned hero scales its freeze by time since the last hit and sets clip speed.
 EXPECT_FINDING_ABSENT = {"unity-wave-hero": ["hit_stop_ignores_hit_rate", "anim_speed_not_tied_to_move_speed"],

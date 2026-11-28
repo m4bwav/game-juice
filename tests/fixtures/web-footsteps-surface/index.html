@@ -1,0 +1,24 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Walker, steps per surface and gait</title></head>
+<body><canvas id="c" width="960" height="540"></canvas>
+<script>
+const STRIDE = 48;
+const stepSets = {
+  grass: ['grass1.ogg', 'grass2.ogg', 'grass3.ogg'].map(f => new Audio(f)),
+  stone: ['stone1.ogg', 'stone2.ogg', 'stone3.ogg'].map(f => new Audio(f)),
+};
+const player = { x: 0, speed: 120, distSinceStep: 0 };
+function surfaceAt(x) { return x % 400 < 200 ? 'grass' : 'stone'; }
+function playFootstep(surface) {
+  const set = stepSets[surface];
+  const s = set[Math.floor(Math.random() * set.length)].cloneNode();
+  s.playbackRate = 0.95 + Math.random() * 0.1;
+  s.volume = 0.2;
+  s.play();
+}
+function update(dt) {
+  player.x += player.speed * dt;
+  player.distSinceStep += player.speed * dt;
+  if (player.distSinceStep >= STRIDE) { player.distSinceStep -= STRIDE; playFootstep(surfaceAt(player.x)); }
+}
+</script></body></html>

@@ -2,7 +2,11 @@
 
 Every change to [SKILL.md](SKILL.md) and its companions, newest first, each with the reason. Reasons cite findings in [RESEARCH.md](RESEARCH.md) (`R-`), lessons in [LEARNINGS.md](LEARNINGS.md) (`L-`), and test runs in [TESTS.md](TESTS.md) (`T-`). State in `evergreen.json`. Protocol: MAINTENANCE.md.
 
-Entry shape: `### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
+Entry shape: `### C-20261128-1 · 2026-11-28 · footsteps_no_surface audio finding (no version bump)
+- because: user request (harvestwright gait-hoof-steps: a mounted RPG's shipped file list shows hoof sets per surface (dirt, grass, stone, water) and per gait (walk, gallop), 8 takes each, plus physics-material surfaces and a gallop animation rate kept within 0.85-1.15; file names and design notes only, read-only, no audio copied, no game named)
+- files: scripts/juice_scan.py (footstep_findings), SKILL.md (audio pass), tests/check_scan.py, tests/fixtures/web-footsteps-flat, tests/fixtures/web-footsteps-surface, tests/fixtures/godot-mount-steps
+- With `--audio`, a function that plays a footstep or hoof sound in a project with no surface lookup (physics material, terrain layer, ground tag) is flagged, with per-gait cadence and variant numbers. Triggers unchanged, so evals were not re-run.
+### C-YYYYMMDD-n · date · one-line summary`, then `because:` (IDs or "user request"), `files:` (file and section), and a sentence on what changed. Cite section headings, not line numbers.
 
 ### C-20261121-2 · 2026-11-21 · looping_animation_no_reduce finding; still toggle rule (1.5.2)
 - because: user request (technique harvest of a browser game's shipped CSS and JS; no licence, so methods and numbers only, nothing copied)
